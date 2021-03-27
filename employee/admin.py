@@ -1,0 +1,31 @@
+from django.contrib import admin
+from .models import Hr,Employee,Persional_Info,Bank_Info,Education_Info, Attendance, Hr_Attendance
+
+# Register your models here.
+class HrAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Hr, HrAdmin)
+class EmployeeAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Employee, EmployeeAdmin)
+
+class PersionalinfoAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Persional_Info, PersionalinfoAdmin)
+
+class Bank_InfoAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Bank_Info, Bank_InfoAdmin)
+
+class Education_InfoAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Education_Info, Education_InfoAdmin)
+
+class Attendance_InfoAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Attendance, Attendance_InfoAdmin)
+
+class Hr_Attendance_InfoAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Hr_Attendance, Hr_Attendance_InfoAdmin)

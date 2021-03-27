@@ -1,0 +1,99 @@
+{% extends 'hr_base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+  </style>
+</head>
+{%include 'attendance_base.html'%}
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">{{today}}</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Emp_id</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Start Work</th>
+          <th>End Work</th>
+
+        </tr>
+      </thead>
+      {% for p in todayattend %}
+      <tr>
+        <td> {{p.user}}</td>
+        <td> {{p.user.first_name}} {{p.user.last_name}}</td>
+        <td>{{p.user.email}}</td>
+        <td>
+          {% if p.Start_time and p.Start_time is not null %}
+          <button type="button" class="btn btn-success" disabled>Started</button>
+          {% else %}
+          <a href="/start-session/"><button type="button" class="btn btn-success" >Start</button></a>
+          {% endif %}
+</td>
+        <td>
+
+    {% if p.end_time is not none or p.end_time is not null or p.Start_time is null or p.Start_time is none %}
+  <button type="button" class="btn btn-danger" disabled>End</button>
+          {% else %}
+          <a href="/end-session/"><button type="button" class="btn btn-danger">End</button></a>
+          {% endif %}
+
+</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+<br><br>
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Attendance</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Emp_ID</th>
+          <th>Present</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Approvement</th>
+
+        </tr>
+      </thead>
+      {% for p in hrattends %}
+      <tr>
+        <td> {{p.attendance_date}}</td>
+        <td> {{p.user}}</td>
+        <td>{% if p.present %} Present {% else %} Absent {% endif %}</td>
+        <td>{% if p.present %} {{p.Start_time}} {% else %} - {% endif %}</td>
+        <td>{% if p.present %} {{p.end_time}} {% else %} - {% endif %}</td>
+        {% if p.approved %} <td class="bg-success">Approved</td> {% else %}
+        {% if p.present %} <td class="bg-danger">Pending</td> {% else %}<td> - </td> {% endif %}{% endif %}
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock content %}

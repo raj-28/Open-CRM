@@ -1,0 +1,106 @@
+{% extends 'hr_base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+  </style>
+</head>
+{%include 'attendance_base.html'%}
+
+<br>
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">{{today}}</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Emp_ID</th>
+          <th>Name</th>
+          <th>Present</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Approved</th>
+
+        </tr>
+      </thead>
+      {% for p in empattendance %}
+      <tr>
+        <td> {{p.attendance_date}}</td>
+        <td> {{p.user}}</td>
+        <td> {{p.user.first_name}} {{p.user.last_name}}</td>
+        <td>{% if p.present %} Present {% else %} Absent {% endif %}</td>
+        <td>{% if p.present %} {{p.Start_time}} {% else %} - {% endif %}</td>
+        <td>{% if p.present %} {{p.end_time}} {% else %} - {% endif %}</td>
+        <td>{% if not p.present %}
+          {% if p.approved %}
+          <button type="button" class="btn btn-danger" disabled>Absent</button>
+          {% else %}
+          <a href="/employee-absent/{{p.user.id}}/"><button type="button" class="btn btn-danger">Absent</button></a>
+          {% endif %}
+          {% else %}
+          {% if p.approved %}<a href="/hr-unapproved/{{p.user.id}}/"><button type="button" class="btn btn-success">Approved</button></a>
+            {% else %} <a href="/hr-approved/{{p.user.id}}_{{ p.attendance_date|date:'Y-m-d' }}/"><button type="button" class="btn btn-danger">Approve</button></a> {% endif %}
+        {% endif %}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+<br><br><br>
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title"> Attendance </h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Emp_ID</th>
+          <th>Name</th>
+          <th>Present</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Approved</th>
+
+        </tr>
+      </thead>
+      {% for p in allempattndnc %}
+      {% if p.present %}<tr>{% else %}<tr class="bg-danger">{% endif %}
+        <td> {{p.attendance_date}}</td>
+        <td> {{p.user}}</td>
+        <td> {{p.user.first_name}} {{p.user.last_name}}</td>
+        <td>{% if p.present %} Present {% else %} Absent {% endif %}</td>
+        <td>{% if p.present %} {{p.Start_time}} {% else %} - {% endif %}</td>
+        <td>{% if p.present %} {{p.end_time}} {% else %} - {% endif %}</td>
+        <td>{% if not p.present %}
+          <button type="button" class="btn btn-danger" disabled>Absent</button>
+          {% else %}
+          {% if p.approved %}<button type="button" class="btn btn-success" disabled>Approved </button>
+            {% else %} <a href="/hr-approved/{{p.user.id}}_{{ p.attendance_date|date:'Y-m-d' }}/"><button type="button" class="btn btn-danger">Approve</button></a> {% endif %}
+        {% endif %}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock content %}
