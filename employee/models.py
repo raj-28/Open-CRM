@@ -19,7 +19,7 @@ gndr=[('Male','Male'),
 class Hr(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     email= models.EmailField(blank=False,null=False)
-    profile_pic= models.ImageField(upload_to='profile_pic/HrProfilePic/',null=True,blank=True)
+    profile_pic= models.ImageField(upload_to='profile_pic/HrProfilePic/',null=True,blank=True,default='default.jpeg')
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20,null=True)
     DOJ = models.DateTimeField(auto_now_add=True,)
@@ -53,7 +53,7 @@ gender=[('Male','Male'),
 class Employee(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     email= models.EmailField(blank=False,null=False)
-    profile_pic= models.ImageField(upload_to='profile_pic/employeeProfilePic/',null=True,blank=True)
+    profile_pic= models.ImageField(upload_to='profile_pic/employeeProfilePic/',null=True,blank=True,default='default.jpeg')
     address = models.CharField(max_length=100)
     mobile = models.CharField(max_length=20,null=False)
     DOJ=models.DateField(auto_now_add=True,)

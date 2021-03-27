@@ -1,4 +1,4 @@
-{% extends 'employee_base.html' %}
+{% extends is_hr|yesno:"hr_base.html,employee_base.html" %}
 {% load static %}
 {% block content %}
 {% load bootstrap4 %}

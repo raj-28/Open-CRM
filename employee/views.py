@@ -218,7 +218,7 @@ def hr_profile(request,slug):
 @user_passes_test(is_Hr)
 def hr_employee_view(request):
     mydict={
-    'Hr':models.Hr.objects.get(user_id=request.user.id), #for profile picture of doctor in sidebar
+    'Hr':models.Hr.objects.get(user_id=request.user.id), #for profile picture of hr in sidebar
     }
     return render(request,'hr_employee.html',context=mydict)
 
@@ -498,7 +498,8 @@ def edit_company_info(request):
 
         dict={
             'info':get_info,
-            'p_form':p_form
+            'p_form':p_form,
+            'is_hr':True
         }
         return render(request,'profile_edit/edit_company_info.html',context=dict)
     elif is_Employee(request.user):
@@ -526,7 +527,8 @@ def edit_company_info(request):
 
         dict={
             'info':get_info,
-            'p_form':p_form
+            'p_form':p_form,
+            'is_hr':False
         }
 
         return render(request,'profile_edit/edit_company_info.html',context=dict)
@@ -563,7 +565,8 @@ def edit_personal_info(request):
             return redirect('profile',user.username)
         dict={
             'info':get_info,
-            'profile_pics':profile_pics
+            'profile_pics':profile_pics,
+            'is_hr':True
         }
         return render(request,'profile_edit/edit_personal_info.html',context=dict)
     elif is_Employee(request.user):
@@ -588,7 +591,8 @@ def edit_personal_info(request):
 
         dict={
             'info':get_info,
-            'profile_pics':profile_pics
+            'profile_pics':profile_pics,
+            'is_hr':False
         }
         return render(request,'profile_edit/edit_personal_info.html',context=dict)
     else:
@@ -615,7 +619,8 @@ def edit_education_info(request):
 
         dict={
             'info':get_info,
-            'profile_pics':profile_pics
+            'profile_pics':profile_pics,
+            'is_hr':True
         }
         return render(request,'profile_edit/edit_education_info.html',context=dict)
     elif is_Employee(request.user):
@@ -635,7 +640,8 @@ def edit_education_info(request):
             return redirect('profile',user.username)
         dict={
             'info':get_info,
-            'profile_pics':profile_pics
+            'profile_pics':profile_pics,
+            'is_hr':False
         }
         return render(request,'profile_edit/edit_education_info.html',context=dict)
     else:
@@ -660,7 +666,8 @@ def edit_bank_info(request):
             return redirect('profile',user.username)
         dict={
             'info':get_info,
-            'profile_pics':profile_pics
+            'profile_pics':profile_pics,
+            'is_hr':True
         }
         return render(request,'profile_edit/edit_bank_info.html',context=dict)
     elif is_Employee(request.user):
@@ -680,7 +687,8 @@ def edit_bank_info(request):
             return redirect('profile',user.username)
         dict={
             'info':get_info,
-            'profile_pics':profile_pics
+            'profile_pics':profile_pics,
+            'is_hr':False
         }
         return render(request,'profile_edit/edit_bank_info.html',context=dict)
     else:

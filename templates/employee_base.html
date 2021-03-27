@@ -283,9 +283,9 @@
       <a style="color:white; text-decoration:none;" href="/employee-dashboard"><li tabindex="0" class="icon-dashboard"> <span>Dashboard</span> </li></a>
       <a style="color:white; text-decoration:none;" href="/profile/{{user.username}}"><li tabindex="0" class="icon-users"> <span>Profile</span> </li></a>
       <a style="color:white; text-decoration:none;" href="/attendance"><li tabindex="0" class="icon-calendar"> <span>Attendance</span></li></a>
-      <a style="color:white; text-decoration:none;" href="/patient-appointment"><li tabindex="0" class="icon-calendar"> <span>Task</span></li></a>
-      <li tabindex="0" class="icon-calendar"> <a style="color:white; text-decoration:none;" href="/patient-appointment"><span>Leave request</span></a></li>
-      <a style="color:white; text-decoration:none;" href="/patient-discharge"><li tabindex="0" class="icon-users"> <span>Notifications</span></li></a>
+      <a style="color:white; text-decoration:none;" href=""><li tabindex="0" class="icon-calendar"> <span>Task</span></li></a>
+      <li tabindex="0" class="icon-calendar"> <a style="color:white; text-decoration:none;" href=""><span>Leave request</span></a></li>
+      <a style="color:white; text-decoration:none;" href=""><li tabindex="0" class="icon-users"> <span>Notifications</span></li></a>
       <a style="color:white; text-decoration:none;" href="/logout"><li tabindex="0" class="icon-users"> <span>Logout</span></li></a>
     </ul>
   </nav>
@@ -312,31 +312,8 @@
     {% endblock content %}
     <!-- content end-->
     <br><br><br><br><br><br><br>
-    <footer>
-      <p>
-        <a id="ftr" href="https://facebook.com/sumit.luv/" class="fa fa-facebook"></a>
-        <a id="ftr" href="https://api.whatsapp.com/send?phone=919572181024&text=Hello%20Sumit.%0d%0aHow%20are%20you%20%3f%0d%0aI%20came%20from%20your%20website.&source=&data=#" class="fa fa-whatsapp"></a>
-        <a id="ftr" href="https://instagram.com/sumit.luv" class="fa fa-instagram"></a>
-        <a id="ftr" href="https://twitter.com/sumitkumar1503" class="fa fa-twitter"></a>
-      </p>
-      <br>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 col-sm-12">
-            <div style="color:#ffffff;" class="wow fadeInUp footer-copyright">
-              <p>Made in India <br>
-                Copyright &copy; GurjariMall </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
+    {% include 'footer.html' %}
   </main>
-  <!--
-  developed By : sumit kumar
-  facebook : fb.com/sumit.luv
-  youtube : youtube.com/lazycoders
-  -->
 
 </body>
 

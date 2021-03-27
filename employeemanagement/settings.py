@@ -26,7 +26,7 @@ SECRET_KEY = '@3%#w_he1prnn(j7axfw8yfv)66yp7+nxk-uz)smg(0d4!$*=7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['gurjarimall.herokuapp.com','*']
 
 
 # Application definition
