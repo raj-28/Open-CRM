@@ -1,4 +1,4 @@
-{% extends 'hr_base.html' %}
+{% extends is_hr|yesno:"hr_base.html,employee_base.html" %}
 {% load static %}
 {% block content %}
 <br><br>
@@ -77,45 +77,52 @@
 </head>
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
 <div class="container">
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">{% if is_hr %}<a href="/hr-dashboard">Dashboard</a>{% else %}<a href="/employee-dashboard">Dashboard</a>{% endif %}</li>
+              <li class="breadcrumb-item active" aria-current="page">Task-view</li>
+            </ol>
+          </nav>
   <div class="row">
-    <div class="col-md-4 col-xl-4">
+    <div class="col-md-4 col-xl-6">
       <div class="card bg-c-green order-card">
         <div class="card-block">
-          <a href="/hr-add-employee">
-            <h6 class="m-b-20"> Employee Entery</h6>
+          <a href="/my-tasks">
+            <h6 class="m-b-20"> Create Task</h6>
           </a>
           <br>
-          <h2 class="text-right"><i class="fas fa-user-injured f-left"></i></h2>
+          <h2 class="text-right"><i class="fas fa-tasks f-left"></i></h2>
 
         </div>
       </div>
     </div>
-      <div class="col-md-4 col-xl-4">
+      <div class="col-md-4 col-xl-6">
       <div class="card bg-c-blue order-card">
         <div class="card-block">
-          <a href="/hr-view-employee">
-            <h6 class="m-b-20">Your Employee Record</h6>
+          <a href="/assigned-task">
+            <h6 class="m-b-20">Assigned Task</h6>
           </a>
           <br>
-          <h2 class="text-right"><i class="fas fa-user-injured f-left"></i></h2>
+          <h2 class="text-right"><i class="fas fa-tasks f-left"></i></h2>
 
         </div>
       </div>
     </div>
 
 
-    <div class="col-md-4 col-xl-4">
-      <div class="card bg-c-pink order-card">
-        <div class="card-block">
-          <a href="/doctor-view-discharge-patient">
-            <h6 class="m-b-20">Your Deactivate Employee</h6>
-          </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-eject f-left"></i></h2>
-        </div>
-      </div>
-    </div>
+<!--    <div class="col-md-4 col-xl-4">-->
+<!--      <div class="card bg-c-pink order-card">-->
+<!--        <div class="card-block">-->
+<!--          <a href="/doctor-view-discharge-patient">-->
+<!--            <h6 class="m-b-20">Your Deactivate Employee</h6>-->
+<!--          </a>-->
+<!--          <br>-->
+<!--          <h2 class="text-right"><i class="fas fa-eject f-left"></i></h2>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </div>
 

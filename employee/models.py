@@ -20,7 +20,7 @@ class Hr(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     email= models.EmailField(blank=False,null=False)
     profile_pic= models.ImageField(upload_to='profile_pic/HrProfilePic/',null=True,blank=True,default='default.jpeg')
-    address = models.CharField(max_length=40)
+    address = models.CharField(max_length=100)
     mobile = models.CharField(max_length=20,null=True)
     DOJ = models.DateTimeField(auto_now_add=True,)
     status=models.BooleanField(default=False)
@@ -140,4 +140,40 @@ class Hr_Attendance(models.Model):
 
 
 # class Task(models.Model):
+
+
+class Task(models.Model):
+    created_by = models.ForeignKey(User,on_delete=models.CASCADE,related_name='created_by')
+    assigned_to = models.ForeignKey(User,on_delete=models.CASCADE,related_name='assigned_to')
+    task_subject = models.CharField(max_length=100)
+    task_detail = models.TextField()
+    status = models.CharField(max_length=10,blank=True,null=True)
+    completed = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+    due_date = models.DateField(blank=True,null=True)
+    created_at = models.DateField(blank=True,null=True,auto_now_add=True)
+
+    def __str__(self):
+        return self.created_by.username +"_to_"+self.assigned_to.username
+
+mode=[('assign','assign'),
+('reply','reply'),
+]
+
+class Task_Media(models.Model):
+    task_id = models.ForeignKey(Task,on_delete=models.CASCADE)
+    media = models.FileField(upload_to='task_media/',blank=True,null=True)
+    description = models.CharField(max_length=400)
+    media_mode = models.CharField(max_length=50,choices=mode,default='assign')
+
+class Task_Comment(models.Model):
+    task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task_id')
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user')
+    comment = models.TextField(blank=True,null=True)
+    created = models.DateField(auto_now_add=True)
+
+
+    def __str__(self):
+        return self.user.username
+
 

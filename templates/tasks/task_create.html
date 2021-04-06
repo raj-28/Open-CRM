@@ -1,0 +1,88 @@
+{% extends is_hr|yesno:"hr_base.html,employee_base.html" %}
+{% block content %}
+{%load static%}
+{% load widget_tweaks %}
+<head>
+	<title>Create Task</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<style>
+		.form-box{
+    border:1px solid #c1c1c1;
+    color:#5cb55c;
+}
+	</style>
+</head>
+<body>
+<div class="container" >
+	<nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">{% if is_hr %}<a href="/hr-dashboard">Dashboard</a>{% else %}<a href="/employee-dashboard">Dashboard</a>{% endif %}</li>
+              <li class="breadcrumb-item "><a href="/task-view">Task-view</a></li>
+				<li class="breadcrumb-item "><a href="/my-tasks">my-tasks</a></li>
+              <li class="breadcrumb-item active" aria-current="page">create-task</li>
+            </ol>
+          </nav>
+	<div class="row">
+		<div class="col-md-offset-3 col-md-6 col-sm-6 col-xs-12 form-box">
+			<h1 class="text-center">Create Task</h1> <hr>
+			<form class="form-horizontal" role="form" method="post">
+				{% csrf_token %}
+				<div class="form-group">
+					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="firstname">Task Subject:</label>
+					<div class="col-md-8 col-sm-8 col-xs-8">
+						<input type="text" class="form-control" id="firstname" placeholder="Task Subject" maxlength="50" name="subject" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="lastname">Task Detail:</label>
+					<div class="col-md-8 col-sm-8 col-xs-8">
+						<textarea  class="form-control" id="lastname" placeholder="Task Descreption" name="details"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="lastname">Assigned To:</label>
+					<div class="col-md-8 col-sm-8 col-xs-8">
+						<select name = "assigned" class="form-control" required placeholder="assigned to">
+							<option value="">---------</option>
+							{% for i in users %}
+						<option value = "{{i.username}}" selected>{{i.username}}</option>
+							{% endfor %}
+					 </select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="email">Due Date:</label>
+					<div class="col-md-8 col-sm-8 col-xs-8">
+						<input type="date" class="form-control" id="email" placeholder="Enter Email" name="duedate">
+					</div>
+				</div>
+
+
+				<hr>
+		        <div class="form-group">
+					<div class="col-md-6 col-sm-6 col-xs-6 col-md-offset-3 col-sm-offset-3 col-xs-offset-3 text-center">
+						<button type="submit" class="btn btn-success btn-block submit">Submit</button><br>
+						<a href="/my-tasks"> <button type="button" class="btn btn-danger btn-block submit">Cancel</button></a>
+					</div>
+				</div>
+		    </form>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function() {
+      $(".add-more").click(function(){
+          var html = $(".copy").html();
+          $(".after-add-more").after(html);
+      });
+      $("body").on("click",".remove",function(){
+          $(this).parents(".control-group").remove();
+      });
+    });
+</script>
+</body>
+{% endblock content %}

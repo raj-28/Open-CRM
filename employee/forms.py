@@ -62,3 +62,9 @@ class ProfileUpdateFormforHr(forms.ModelForm):
     class Meta:
         model = models.Hr
         fields = ['profile_pic']
+
+class taskmediaForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Task_Media
+        fields = ['media',]

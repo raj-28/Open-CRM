@@ -63,6 +63,16 @@ urlpatterns = [
     path('edit-bank-info/', views.edit_bank_info,name='edit_bank_info'),
 
 
+    #task managent
+
+    path('task-view',views.task_view,name='tasks'),
+    path('my-tasks',views.my_tasks,name='my-tasks'),
+    path('add-task',views.create_task,name='add-task'),
+    path('task/<slug:slug>',views.task_detail,name='add-task'),
+    path('add-media/<slug:slug>',views.add_media,name='add-media'),
+    path('assigned-task',views.assigned_task,name='assigned-task'),
+
+
 ]
 
 if settings.DEBUG:

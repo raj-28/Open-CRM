@@ -1,0 +1,3 @@
+instagram logic(followers and following) for Post (video,tweet,image)
+facebook logic(friends): when user wants to show the document which is uploaded by that perticular user then he send friend request to file uploader.
+document not dounloadable only readable .

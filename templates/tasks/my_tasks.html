@@ -1,0 +1,75 @@
+{% extends is_hr|yesno:"hr_base.html,employee_base.html" %}
+{% block content %}
+{%load static%}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+  </style>
+</head>
+
+<div class="container">
+  <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">{% if is_hr %}<a href="/hr-dashboard">Dashboard</a>{% else %}<a href="/employee-dashboard">Dashboard</a>{% endif %}</li>
+              <li class="breadcrumb-item "><a href="/task-view">Task-view</a></li>
+              <li class="breadcrumb-item active" aria-current="page">my-tasks</li>
+            </ol>
+          </nav>
+
+<a href="/add-task"><button type="button" class="btn btn-default" style="float:right;"><span class="glyphicon glyphicon-plus">  </span>  &nbsp;Add </button></a>
+
+  <br>
+  <br>
+  <div class="panel panel-primary">
+
+    <div class="panel-heading">
+      <h6 class="panel-title">Your Total Tasks List</h6>
+    </div>
+    <table class="table table-bordered" id="dev-table">
+      <thead>
+        <tr>
+          <th>Task_ID</th>
+          <th>Assigned To</th>
+          <th>DATE</th>
+          <th>TASK SUBJECT</th>
+          <th>DETAILS</th>
+          <th>DUE DATE</th>
+          <th>COMPLETED</th>
+
+        </tr>
+      </thead>
+      {% for task in tasks%}
+      <tr >
+        <td ><a href="/task/{{task.id}}"> {{task.id}}</a></td>
+        <td >{{task.assigned_to}} </td>
+        <td> {{task.created_at}}</td>
+        <td><a href="/task/{{task.id}}">{{task.task_subject}}</a></td>
+        <td>{{task.task_detail}}</td>
+        <td>{{task.due_date}}</td>
+        <td>{{task.completed}}</td>
+      </tr>
+      {% endfor %}
+
+
+
+    </table>
+  </div>
+</div>
+
+
+{% endblock content %}

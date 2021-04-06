@@ -693,3 +693,152 @@ def edit_bank_info(request):
         return render(request,'profile_edit/edit_bank_info.html',context=dict)
     else:
         return HttpResponse("Error")
+
+
+@login_required(login_url='adminlogin')
+def task_view(request):
+    dict={
+        'is_hr':is_Hr(request.user)
+    }
+    return render(request,'tasks/task_view.html',context=dict)
+
+@login_required(login_url='adminlogin')
+def my_tasks(request):
+    tasks = models.Task.objects.filter(created_by=request.user).order_by('-id')
+    dict={
+        'tasks':tasks,
+        'is_hr':is_Hr(request.user),
+    }
+    return render(request,'tasks/my_tasks.html',context=dict)
+
+@login_required(login_url='adminlogin')
+def create_task(request):
+    user = models.User.objects.filter()
+    users1=[]
+    users2=[]
+    for i in user:
+        if i!=request.user:
+            if i.groups.filter(name="EMPLOYEE").exists():
+                users1.append(i)
+            elif i.groups.filter(name="HR").exists():
+                users2.append(i)
+
+    users=[]
+    users=users1+users2
+
+    if request.method=='POST':
+        task_sub = request.POST.get('subject')
+        task_detail = request.POST.get('details')
+        assigned_to = request.POST.get('assigned')
+        usr = get_object_or_404(models.User,username=assigned_to)
+        created_by=request.user
+        due_date = request.POST.get('duedate')
+
+        if due_date=="":
+            task=models.Task.objects.create(created_by=created_by,assigned_to=usr,task_subject=task_sub,task_detail=task_detail,)
+            print(task.id)
+        else:
+            task=models.Task.objects.create(created_by=created_by,assigned_to=usr,task_subject=task_sub,task_detail=task_detail,due_date=due_date)
+        task_id=get_object_or_404(models.Task,id=task.id)
+        return redirect('add-media',task_id.id)
+
+
+    dict={
+        'users':users,
+        'is_hr':is_Hr(request.user),
+    }
+    return render(request,'tasks/task_create.html',context=dict)
+
+@login_required(login_url='adminlogin')
+def add_media(request,slug):
+    task_id = get_object_or_404(models.Task,id=slug)
+    form=forms.taskmediaForm()
+    if task_id.created_by==request.user:
+        mode='assign'
+        go='mytask'
+    else:
+        mode='reply'
+        go='assignedtask'
+    if task_id.created_by==request.user or task_id.assigned_to==request.user:
+        if request.method=="POST":
+            form=forms.taskmediaForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.instance.task_id=task_id
+                form.instance.description=request.POST.get('desc')
+                form.instance.media_mode=mode
+                f=form.save()
+                f.save()
+
+                return redirect('add-media',task_id.id)
+        dict={
+            'slug':slug,
+            'form':form,
+            'is_hr':is_Hr(request.user),
+            'checkuser':go
+        }
+        return render(request,'tasks/add_media_page.html',context=dict)
+    else:
+        return HttpResponse('you are not allowed')
+
+@login_required(login_url='adminlogin')
+def task_detail(request,slug):
+    assigned_media=[]
+    responsed_media=[]
+    task = get_object_or_404(models.Task,id=slug)
+    rel_media = models.Task_Media.objects.filter(task_id=task.id,)
+    task_cmt = models.Task_Comment.objects.filter(task_id=task.id)
+    if task.created_by==request.user:
+        go='mytask'
+    else:
+        go='assignedtask'
+    if task.created_by==request.user or task.assigned_to==request.user:
+        for i in rel_media:
+            if i.media_mode == 'assign':
+                assigned_media.append(i)
+            else:
+                responsed_media.append(i)
+        if task.created_by==request.user:
+            if request.method == 'POST':
+                comment = request.POST.get('comment')
+
+                print('comment')
+                models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
+            dict={
+                'is_hr':is_Hr(request.user),
+                'task':task,
+                'assigned_media':assigned_media,
+                'responsed_media':responsed_media,
+                'currentuser':True,
+                'task_cmt':task_cmt,
+                'checkuser':go
+            }
+            return render(request,'tasks/task_detail.html',context=dict)
+        else:
+            if request.method=='POST':
+                status = request.POST.get('status')
+                completed = request.POST.get('Task')
+                comment = request.POST.get('comment')
+                task.status = status
+                task.completed =completed
+                task.save()
+                models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
+            dict={
+                'is_hr':is_Hr(request.user),
+                'task':task,
+                'assigned_media':assigned_media,
+                'responsed_media':responsed_media,
+                'currentuser':False,
+                'task_cmt':task_cmt
+            }
+            return render(request,'tasks/task_detail.html',context=dict)
+    else:
+        return HttpResponse("you are not allow here")
+
+@login_required(login_url='adminlogin')
+def assigned_task(request):
+    tasks = models.Task.objects.filter(assigned_to=request.user).order_by('-id')
+    dict={
+        'is_hr':is_Hr(request.user),
+        'tasks':tasks
+    }
+    return render(request,'tasks/assigned_task_view.html',context=dict)
