@@ -48,7 +48,7 @@
 						<select name = "assigned" class="form-control" required placeholder="assigned to">
 							<option value="">---------</option>
 							{% for i in users %}
-						<option value = "{{i.username}}" selected>{{i.username}}</option>
+							<option value = "{{i.username}}" selected>{{i.username}} ({{i.first_name}} {{i.last_name}})</option>
 							{% endfor %}
 					 </select>
 					</div>
