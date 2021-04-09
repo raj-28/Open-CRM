@@ -164,10 +164,10 @@ def hr_profile(request,slug):
     user=get_object_or_404(models.User,username=slug)
     if is_Hr(request.user):
         if is_Hr(user):
-            personal_info=get_object_or_404(models.Hr,user=request.user)
-            employeeinfo=get_object_or_404(models.Persional_Info,employee_id=request.user)
-            educationinfo=get_object_or_404(models.Education_Info,employee_id=request.user)
-            bankinfo=get_object_or_404(models.Bank_Info,employee_id=request.user)
+            personal_info=get_object_or_404(models.Hr,user=user)
+            employeeinfo=get_object_or_404(models.Persional_Info,employee_id=user)
+            educationinfo=get_object_or_404(models.Education_Info,employee_id=user)
+            bankinfo=get_object_or_404(models.Bank_Info,employee_id=user)
             dict={
                 'personalinfo':personal_info,
                 'employeeinfo':employeeinfo,
@@ -255,8 +255,9 @@ def hr_add_employee_view(request):
 @user_passes_test(is_Hr)
 def hr_view_employee_view(request):
     employee=models.Employee.objects.all().filter(status=True)
+    hr=models.Hr.objects.all().filter(status=True)
 
-    return render(request,'hr_view_employee.html',{'employees':employee,})
+    return render(request,'hr_view_employee.html',{'employees':employee,'hrs':hr})
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_Hr)
@@ -482,7 +483,7 @@ def end_session(request):
         duration=dur[0]+" "+"Hr"
 
         # duration = datetime.timedelta(end_time,start_time)
-        obj.duration = duration
+        obj.work_duration = duration
         obj.present=True
         obj.save()
         return redirect('employee-attendance')
@@ -500,7 +501,7 @@ def end_session(request):
         duration=dur[0]+" "+"Hr"
 
         # duration = datetime.timedelta(end_time,start_time)
-        obj.duration = duration
+        obj.work_duration = duration
         obj.present=True
         obj.save()
         return redirect('hr-add-attendance')

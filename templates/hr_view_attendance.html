@@ -90,7 +90,7 @@
         <td>{% if p.present %} Present {% else %} Absent {% endif %}</td>
         <td>{% if p.present %} {{p.Start_time}} {% else %} - {% endif %}</td>
         <td>{% if p.present %} {{p.end_time}} {% else %} - {% endif %}</td>
-        <td>{% if p.duration %} {{p.duration}} {% else %} - {% endif %}</td>
+        <td>{% if p.work_duration %} {{p.work_duration}} {% else %} - {% endif %}</td>
         {% if p.approved %} <td class="bg-success">Approved</td> {% else %}
         {% if p.present %} <td class="bg-danger">Pending</td> {% else %}<td> - </td> {% endif %}{% endif %}
       </tr>
