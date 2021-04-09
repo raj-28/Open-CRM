@@ -117,6 +117,7 @@ class Attendance(models.Model):
     Start_time=models.TimeField(null=True,blank=True)
     end_time=models.TimeField(null=True,blank=True)
     approved = models.BooleanField(default=False)
+    duration = models.CharField(blank=True,null=True,max_length=50)
 
 
 
@@ -131,6 +132,7 @@ class Hr_Attendance(models.Model):
     Start_time=models.TimeField(null=True,blank=True)
     end_time=models.TimeField(null=True,blank=True)
     approved = models.BooleanField(default=False)
+    duration = models.CharField(blank=True,null=True,max_length=50)
 
 
 
@@ -175,5 +177,6 @@ class Task_Comment(models.Model):
 
     def __str__(self):
         return self.user.username
+
 
 

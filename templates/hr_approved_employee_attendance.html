@@ -27,7 +27,7 @@
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">{{today}}</h6>
+      <h6 class="panel-title">{{today}} ({{ today|date:"l" }})</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
@@ -38,18 +38,20 @@
           <th>Present</th>
           <th>Start Time</th>
           <th>End Time</th>
+          <th>Duration</th>
           <th>Approved</th>
 
         </tr>
       </thead>
       {% for p in empattendance %}
       <tr>
-        <td> {{p.attendance_date}}</td>
+        <td> {{p.attendance_date}}  ({{ p.attendance_date|date:"l" }})</td>
         <td> {{p.user}}</td>
         <td> {{p.user.first_name}} {{p.user.last_name}}</td>
         <td>{% if p.present %} Present {% else %} Absent {% endif %}</td>
         <td>{% if p.present %} {{p.Start_time}} {% else %} - {% endif %}</td>
         <td>{% if p.present %} {{p.end_time}} {% else %} - {% endif %}</td>
+        <td>{% if p.duration %} {{p.duration}} {% else %} - {% endif %}</td>
         <td>{% if not p.present %}
           {% if p.approved %}
           <button type="button" class="btn btn-danger" disabled>Absent</button>
@@ -80,24 +82,28 @@
           <th>Present</th>
           <th>Start Time</th>
           <th>End Time</th>
+          <th>Duration</th>
           <th>Approved</th>
 
         </tr>
       </thead>
       {% for p in allempattndnc %}
       {% if p.present %}<tr>{% else %}<tr class="bg-danger">{% endif %}
-        <td> {{p.attendance_date}}</td>
+
+        <td> {{p.attendance_date}} ({{ p.attendance_date|date:"l" }})</td>
         <td> {{p.user}}</td>
         <td> {{p.user.first_name}} {{p.user.last_name}}</td>
         <td>{% if p.present %} Present {% else %} Absent {% endif %}</td>
         <td>{% if p.present %} {{p.Start_time}} {% else %} - {% endif %}</td>
         <td>{% if p.present %} {{p.end_time}} {% else %} - {% endif %}</td>
+        <td>{% if p.duration %} {{p.duration}} {% else %} - {% endif %}</td>
         <td>{% if not p.present %}
           <button type="button" class="btn btn-danger" disabled>Absent</button>
           {% else %}
           {% if p.approved %}<button type="button" class="btn btn-success" disabled>Approved </button>
             {% else %} <a href="/hr-approved/{{p.user.id}}_{{ p.attendance_date|date:'Y-m-d' }}/"><button type="button" class="btn btn-danger">Approve</button></a> {% endif %}
         {% endif %}</td>
+      
       </tr>
       {% endfor %}
     </table>

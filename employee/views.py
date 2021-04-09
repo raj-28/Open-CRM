@@ -1,5 +1,5 @@
+from datetime import datetime
 import datetime
-
 from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -261,6 +261,20 @@ def hr_view_employee_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_Hr)
 def hr_view_attendance(request):
+    today = timezone.now().today().date()
+    hr_obj = models.Hr.objects.all()
+    emp_obj = models.Employee.objects.all()
+    hrattend=models.Hr_Attendance.objects.filter(attendance_date=today,user=request.user)
+    #if attendannce object is not create then 1st create and then go ahead
+    if not hrattend:
+        for user in hr_obj:
+            att=models.Hr_Attendance.objects.filter(attendance_date=today,user=user.user)
+            if not att:
+                obj=models.Hr_Attendance.objects.create(user=user.user,attendance_date=today)
+        for user in emp_obj:
+            att1=models.Attendance.objects.filter(attendance_date=today,user=user.user)
+            if not att1:
+                obj=models.Attendance.objects.create(user=user.user,attendance_date=today)
 
     return render(request,'attendance_card.html')
 
@@ -269,33 +283,23 @@ def hr_view_attendance(request):
 def hr_add_attendance(request):
     today = timezone.now().today().date()
     hrattend=models.Hr_Attendance.objects.filter(attendance_date=today,user=request.user)
-    hrattend2=models.Hr_Attendance.objects.filter(user=request.user).order_by('-attendance_date')
+    hrattend2=models.Hr_Attendance.objects.all().order_by('-attendance_date')
     hrlist=[]
+
     for i in hrattend2:
         if i.attendance_date==today:
             print("hello")
         elif i.attendance_date<today:
             hrlist.append(i)
-    #if attendannce object is not create then 1st create and then go ahead
-    if not hrattend:
-        obj=models.Hr_Attendance.objects.create(user=request.user,attendance_date=today)
-        hrattend=models.Hr_Attendance.objects.filter(attendance_date=today,user=request.user)
-        # empattend2=models.Attendance.objects.filter(user=request.user)
 
-        mydict={
-            'todayattend':hrattend,
-            'hrattends':hrlist,
-            'today':today
-        }
-        return render(request,'hr_view_attendance.html',context=mydict)
-    else:
-        mydict={
-            'todayattend':hrattend,
-            'hrattends':hrlist,
-            'today':today
-        }
 
-        return render(request,'hr_view_attendance.html',context=mydict)
+    mydict={
+        'todayattend':hrattend,
+        'hrattends':hrlist,
+        'today':today
+    }
+    return render(request,'hr_view_attendance.html',context=mydict)
+
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_Hr)
@@ -312,7 +316,7 @@ def hr_view_employee_attendance(request):
     dict={
         'empattendance':empattendance,
         'today':today,
-        'allempattndnc':atendlist
+        'allempattndnc':atendlist,
     }
     return render(request,'hr_approved_employee_attendance.html',context=dict)
 
@@ -323,21 +327,36 @@ def hr_approved(request,slug):
     date=slug.split('_')
     mydate=date[1]
     userid=date[0]
-    print(date)
+    today=str(today)
     if today==mydate:
+
+        hr_obj = models.Hr.objects.all()
+        emp_obj = models.Employee.objects.all()
         empattendance=models.Attendance.objects.filter(attendance_date=today)
         obj=get_object_or_404(models.Attendance,user=userid,attendance_date=today)
         obj.approved=True
         obj.save()
+
+        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+        username=get_object_or_404(models.User,id=userid)
+        getobj=models.Attendance.objects.filter(user=userid,attendance_date=tomorrow)
+        print(getobj)
+         #if attendannce object is not create then 1st create and then go ahead
+        if not getobj:
+
+            for user in hr_obj:
+                att=models.Hr_Attendance.objects.filter(attendance_date=tomorrow,user=user.user)
+                if not att:
+                    obj=models.Hr_Attendance.objects.create(user=user.user,attendance_date=tomorrow)
+            for user in emp_obj:
+                att1=models.Attendance.objects.filter(attendance_date=tomorrow,user=user.user)
+                if not att1:
+                    obj=models.Attendance.objects.create(user=user.user,attendance_date=tomorrow)
     else:
         obj=get_object_or_404(models.Attendance,user=userid,attendance_date=mydate)
         obj.approved=True
         obj.save()
-    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    username=get_object_or_404(models.User,id=userid)
-    getobj=models.Attendance.objects.filter(user=userid,attendance_date=tomorrow)
-    if not getobj:
-        obj=models.Attendance.objects.create(user=username,attendance_date=tomorrow)
+
     return redirect('hr-view-attendance')
 
 @login_required(login_url='adminlogin')
@@ -388,7 +407,9 @@ def employee_dashboard_view(request):
 @user_passes_test(is_Employee)
 def employee_attendance(request):
     today = timezone.now().today().date()
-    print(today)
+
+    hr_obj = models.Hr.objects.all()
+    emp_obj = models.Employee.objects.all()
     empattend=models.Attendance.objects.filter(attendance_date=today,user=request.user)
     empattend2=models.Attendance.objects.filter(user=request.user).order_by('-attendance_date')
     emplist=[]
@@ -399,14 +420,22 @@ def employee_attendance(request):
             emplist.append(i)
     #if attendannce object is not create then 1st create and then go ahead
     if not empattend:
-        obj=models.Attendance.objects.create(user=request.user,attendance_date=today)
+        for user in hr_obj:
+            att=models.Hr_Attendance.objects.filter(attendance_date=today,user=user.user)
+            if not att :
+                obj=models.Hr_Attendance.objects.create(user=user.user,attendance_date=today)
+        for user in emp_obj:
+            att1=models.Attendance.objects.filter(attendance_date=today,user=user.user)
+            if not att1:
+                obj=models.Attendance.objects.create(user=user.user,attendance_date=today)
+        # obj=models.Attendance.objects.create(user=request.user,attendance_date=today)
         empattend=models.Attendance.objects.filter(attendance_date=today,user=request.user)
         # empattend2=models.Attendance.objects.filter(user=request.user)
 
         mydict={
             'todayattend':empattend,
             'empattends':emplist,
-            'today':today
+            'today':today,
         }
         return render(request,'attendance.html',context=mydict)
     else:
@@ -444,7 +473,16 @@ def end_session(request):
         today = timezone.now().today().date()
         obj=get_object_or_404(models.Attendance,attendance_date=today,user=request.user)
         obj.end_time=timezone.now().time()
+        date_format = "%H:%M:%S"
+        start_time = obj.Start_time
+        end_time=timezone.now().time()
+        diff = datetime.combine(today,end_time)-datetime.combine(today,start_time)
+        duration = str(diff)
+        dur=duration.split('.')
+        duration=dur[0]+" "+"Hr"
 
+        # duration = datetime.timedelta(end_time,start_time)
+        obj.duration = duration
         obj.present=True
         obj.save()
         return redirect('employee-attendance')
@@ -453,10 +491,20 @@ def end_session(request):
         obj=get_object_or_404(models.Hr_Attendance,attendance_date=today,user=request.user)
         obj.end_time=timezone.now().time()
         obj.approved=True
+        date_format = "%H:%M:%S"
+        start_time = obj.Start_time
+        end_time=timezone.now().time()
+        diff = datetime.combine(today,end_time)-datetime.combine(today,start_time)
+        duration = str(diff)
+        dur=duration.split('.')
+        duration=dur[0]+" "+"Hr"
 
+        # duration = datetime.timedelta(end_time,start_time)
+        obj.duration = duration
         obj.present=True
         obj.save()
         return redirect('hr-add-attendance')
+
 @login_required(login_url='adminlogin')
 @user_passes_test(is_Hr)
 def employee_absent(request,slug):
@@ -842,3 +890,5 @@ def assigned_task(request):
         'tasks':tasks
     }
     return render(request,'tasks/assigned_task_view.html',context=dict)
+
+
