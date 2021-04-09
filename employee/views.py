@@ -1,5 +1,5 @@
-from datetime import datetime
-import datetime
+from datetime import datetime,timedelta
+# import datetime
 from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -337,7 +337,7 @@ def hr_approved(request,slug):
         obj.approved=True
         obj.save()
 
-        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+        tomorrow = datetime.today().date() + timedelta(days=1)
         username=get_object_or_404(models.User,id=userid)
         getobj=models.Attendance.objects.filter(user=userid,attendance_date=tomorrow)
         print(getobj)
@@ -509,7 +509,7 @@ def end_session(request):
 @user_passes_test(is_Hr)
 def employee_absent(request,slug):
     today = timezone.now().today().date()
-    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+    tomorrow = datetime.today().date() + timedelta(days=1)
     username=get_object_or_404(models.User,id=slug)
     getobj=models.Attendance.objects.filter(user=slug,attendance_date=tomorrow)
     obj1=get_object_or_404(models.Attendance,user=slug,attendance_date=today)
