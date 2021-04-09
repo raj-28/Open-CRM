@@ -103,7 +103,7 @@
           {% if p.approved %}<button type="button" class="btn btn-success" disabled>Approved </button>
             {% else %} <a href="/hr-approved/{{p.user.id}}_{{ p.attendance_date|date:'Y-m-d' }}/"><button type="button" class="btn btn-danger">Approve</button></a> {% endif %}
         {% endif %}</td>
-      
+
       </tr>
       {% endfor %}
     </table>
