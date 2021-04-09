@@ -117,7 +117,7 @@ class Attendance(models.Model):
     Start_time=models.TimeField(null=True,blank=True)
     end_time=models.TimeField(null=True,blank=True)
     approved = models.BooleanField(default=False)
-    duration = models.CharField(blank=True,null=True,max_length=50,default="0:0")
+
 
 
 
@@ -132,7 +132,7 @@ class Hr_Attendance(models.Model):
     Start_time=models.TimeField(null=True,blank=True)
     end_time=models.TimeField(null=True,blank=True)
     approved = models.BooleanField(default=False)
-    duration = models.CharField(blank=True,null=True,max_length=50,default="0:0")
+
 
 
 
