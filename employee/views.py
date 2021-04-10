@@ -1,3 +1,4 @@
+import csv
 from datetime import datetime,timedelta
 # import datetime
 from django.utils import timezone
@@ -370,6 +371,120 @@ def hr_unapproved(request,slug):
     obj.save()
     return redirect('hr-view-attendance')
 
+
+###attendance exel seat download for any perticular user
+@login_required(login_url='adminlogin')
+@user_passes_test(is_Hr)
+def attendance_download_exel(request,slug):
+    # Get all data from UserDetail Databse Table
+    username = get_object_or_404(models.User,username=slug)
+    if is_Hr(username):
+        attendance = models.Hr_Attendance.objects.filter(user=username).order_by('-attendance_date')
+    elif is_Employee(username):
+        attendance = models.Attendance.objects.filter(user=username).order_by('-attendance_date')
+    else:
+        attendance = "nothning"
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="atten_({})_({} {}).csv"'.format(username.username,username.first_name,username.last_name)
+
+    writer = csv.writer(response)
+    writer.writerow(['username:{} ({} {})'.format(username.username, username.first_name,username.last_name),])
+    writer.writerow([""])
+
+    writer.writerow(['Attendance Date', 'Attendance', 'Start_time', 'End_time','Work Duration', 'Approved', ])
+    January=False
+    February=False
+    March = False
+    April = False
+    May = False
+    June = False
+    July = False
+    August = False
+    September = False
+    October = False
+    November = False
+    December = False
+
+    for atnd in attendance:
+        date = str(atnd.attendance_date)
+        month = date.split('-')
+        print(month)
+        month=month[1]
+        if atnd.present:
+            present="Present"
+        else:
+            present="Absent"
+        if atnd.approved:
+            approved = "Approved"
+        else:
+            approved = "Pending"
+        if month=="01" and January==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("January")])
+            writer.writerow([""])
+            January=True
+        elif month=="02" and February==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("February")])
+            writer.writerow([""])
+            February=True
+        elif month=="03" and March==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("March")])
+            writer.writerow([""])
+            March=True
+        elif month=="04" and April==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("April")])
+            writer.writerow([""])
+            April=True
+        elif month=="05" and May==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("May")])
+            writer.writerow([""])
+            May=True
+        elif month=="06" and June==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("June")])
+            writer.writerow([""])
+            June=True
+        elif month=="07" and July==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("July")])
+            writer.writerow([""])
+            July=True
+        elif month=="08" and August==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("August")])
+            writer.writerow([""])
+            August=True
+        elif month=="09" and September==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("January")])
+            writer.writerow([""])
+            March=True
+        elif month=="10" and October==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("October")])
+            writer.writerow([""])
+            October=True
+        elif month=="11" and November==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("November")])
+            writer.writerow([""])
+            November=True
+        elif month=="12" and December==False:
+            writer.writerow([""])
+            writer.writerow(["","","{}".format("December")])
+            writer.writerow([""])
+            December=True
+
+        writer.writerow([date, present, atnd.Start_time, atnd.end_time, atnd.work_duration, approved,])
+
+
+    return response
 
 #---------------------------------------------------------------------------------
 #------------------------ EMPLOYEE RELATED VIEWS START ------------------------------

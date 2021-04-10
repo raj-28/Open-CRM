@@ -44,6 +44,8 @@ urlpatterns = [
     path('hr-view-attendance/', views.hr_view_employee_attendance,name='hr-view-attendance'),
     path('hr-approved/<slug:slug>/', views.hr_approved,name='hr-approved'),
     path('hr-unapproved/<slug:slug>/', views.hr_unapproved,name='hr-unapproved'),
+    path('attendance-download/<slug:slug>/', views.attendance_download_exel,name='attendance-download'),
+
 
 
     path('employee-dashboard/', views.employee_dashboard_view,name='employee-dashboard'),
