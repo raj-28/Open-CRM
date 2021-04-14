@@ -140,21 +140,17 @@ def hr_dashboard_view(request):
     #for three cards
     employee=models.Employee.objects.all().filter(status=True).count()
     deactivated_employee=models.Employee.objects.all().filter(status=False).count()
-    # patientdischarged=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name).count()
+    total_tasks = models.Task.objects.filter(completed=False,assigned_to=request.user).count()
+    total_noti = models.Notifications.objects.filter(is_seen=False,assigned_to=request.user).count()
+    notifications = models.Notifications.objects.filter(is_seen=False,assigned_to=request.user).order_by('-id')
 
-    #for  table in doctor dashboard
-    # appointments=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).order_by('-id')
-    # patientid=[]
-    # for a in appointments:
-    #     patientid.append(a.patientId)
-    # patients=models.Patient.objects.all().filter(status=True,user_id__in=patientid).order_by('-id')
-    # appointments=zip(appointments,patients)
+
     mydict={
     'employee':employee,
     'deactivated_employee':deactivated_employee,
-    # 'patientdischarged':patientdischarged,
-    # 'appointments':appointments,
-    # 'doctor':models.Doctor.objects.get(user_id=request.user.id), #for profile picture of doctor in sidebar
+    'total_task':total_tasks,
+    'total_noti':total_noti,
+    'notifications':notifications,
     }
     # return render(request,'hospital/doctor_dashboard.html',context=mydict)
     return render(request,'hr_dashboard.html',context=mydict)
@@ -492,19 +488,15 @@ def attendance_download_exel(request,slug):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_Employee)
 def employee_dashboard_view(request):
-    # patient=models.Employee.objects.get(user_id=request.user.id)
-    # doctor=models.Hr.objects.get(user_id=patient.assignedDoctorId)
-    # mydict={
-    # 'patient':patient,
-    # 'doctorName':doctor.get_name,
-    # 'doctorMobile':doctor.mobile,
-    # 'doctorAddress':doctor.address,
-    # 'symptoms':patient.symptoms,
-    # 'doctorDepartment':doctor.department,
-    # 'admitDate':patient.admitDate,
-    # }
+    total_tasks = models.Task.objects.filter(completed=False,assigned_to=request.user).count()
+    total_noti = models.Notifications.objects.filter(assigned_to=request.user,is_seen=False).count()
+
+    mydict={
+    'total_tasks':total_tasks,
+    'total_noti':total_noti
+    }
     # return render(request,'hospital/patient_dashboard.html',context=mydict)
-    return render(request,'employee_dashboard.html')
+    return render(request,'employee_dashboard.html',context=mydict)
 
 # @login_required(login_url='adminlogin')
 # @user_passes_test(is_Employee)
@@ -904,6 +896,7 @@ def create_task(request):
         else:
             task=models.Task.objects.create(created_by=created_by,assigned_to=usr,task_subject=task_sub,task_detail=task_detail,due_date=due_date)
         task_id=get_object_or_404(models.Task,id=task.id)
+        noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=usr,type="task_assigned",task_id=task_id)
         return redirect('add-media',task_id.id)
 
 

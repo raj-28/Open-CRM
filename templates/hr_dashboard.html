@@ -31,7 +31,7 @@
     <div class="col-md-4 market-update-gd">
       <div class="market-update-block clr-block-3">
         <div class="col-md-8 market-update-left">
-          <h3>0</h3>
+          <h3>{{total_noti}}</h3>
           <h4>Notification</h4>
         </div>
         <div class="col-md-4 market-update-right">
@@ -43,6 +43,57 @@
     <div class="clearfix"> </div>
   </div>
 <br><br><br><br>
+<div class="row gutters-sm">
+                <div class="col-sm-6 mb-3">
+                  <div class="card h-100">
+                    <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Latest Notifications</th>
+
+
+
+    </tr>
+  </thead>
+  <tbody>
+  {% for i in notifications %}
+    <tr>
+      {% if i.type == "task_assigned" %}
+      <td scope="row">Task : {{i.assigned_by}} ({{i.assigned_by.first_name}} {{i.assigned_by.last_name}}) Assigned to you : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a>   <span class="badge badge-pill badge-danger" style="background-color:red">New</span></td>
+      {% elif true %}
+      <td >sdjkshb</td>
+      {% endif %}
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+                  </div>
+                </div>
+                <div class="col-sm-6 mb-3">
+                  <div class="card h-100">
+                    <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Your Leaves</th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row" style="text-align:center;"><h1>0</h1><br>Taken</th>
+      <td>|</td>
+      <th style="text-align:center;"><h1>0</h1><br>Remaining</th>
+
+    </tr>
+
+
+  </tbody>
+</table>
+                  </div>
+                </div>
+              </div>
 <!--<div class="container">-->
 <!--  <div class="row">-->
 <!--    <div class="panel panel-primary" style="margin-left:15%;">-->

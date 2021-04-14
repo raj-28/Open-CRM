@@ -181,3 +181,41 @@ class Task_Comment(models.Model):
 
 
 
+class User_Leave_Class(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,)
+    month = models.IntegerField(default='01')
+    available_leave = models.IntegerField(default='01')
+    unpaid_leave = models.IntegerField(blank=True,null=True)
+
+
+    def __str__(self):
+        return self.user.username +"_"+ self.month
+
+class Take_Leave(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    leave_from = models.DateField()
+    leave_to = models.DateField()
+    leave_reason = models.TextField()
+    upload_file = models.FileField(blank=True,null=True)
+    Approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
+
+type=[('task_assigned','task_assigned'),
+    ('task_complete','task_complete'),
+      ('task_comment','task_comment')
+]
+
+
+class Notifications(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    assigned_by = models.ForeignKey(User, related_name='noti_assigned_by',on_delete=models.CASCADE)
+    assigned_to = models.ForeignKey(User, related_name='noti_assigned_to', on_delete=models.CASCADE)
+    type        = models.CharField(choices=type,max_length=40,default='task_assigned')
+    is_seen     = models.BooleanField(default=False)
+    task_id     = models.ForeignKey(Task,on_delete=models.CASCADE,related_name='noti_task_id',blank=True,null=True)
+
+
+
