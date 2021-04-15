@@ -73,6 +73,8 @@ urlpatterns = [
     path('task/<slug:slug>',views.task_detail,name='add-task'),
     path('add-media/<slug:slug>',views.add_media,name='add-media'),
     path('assigned-task',views.assigned_task,name='assigned-task'),
+    path('edit-task/',views.edit_task_list,name='edit-task-list'),
+    path('edit-task/<slug:slug>/',views.Edit_task,name='edit-task'),
 
 
 ]

@@ -143,6 +143,7 @@ def hr_dashboard_view(request):
     total_tasks = models.Task.objects.filter(completed=False,assigned_to=request.user).count()
     total_noti = models.Notifications.objects.filter(is_seen=False,assigned_to=request.user).count()
     notifications = models.Notifications.objects.filter(is_seen=False,assigned_to=request.user).order_by('-id')
+    seened_noti = models.Notifications.objects.filter(is_seen=True,assigned_to=request.user).order_by('-id')
 
 
     mydict={
@@ -151,6 +152,7 @@ def hr_dashboard_view(request):
     'total_task':total_tasks,
     'total_noti':total_noti,
     'notifications':notifications,
+    'seen_notifications':seened_noti    ,
     }
     # return render(request,'hospital/doctor_dashboard.html',context=mydict)
     return render(request,'hr_dashboard.html',context=mydict)
@@ -490,12 +492,16 @@ def attendance_download_exel(request,slug):
 def employee_dashboard_view(request):
     total_tasks = models.Task.objects.filter(completed=False,assigned_to=request.user).count()
     total_noti = models.Notifications.objects.filter(assigned_to=request.user,is_seen=False).count()
+    notifications = models.Notifications.objects.filter(is_seen=False,assigned_to=request.user).order_by('-id')
+    seened_noti = models.Notifications.objects.filter(is_seen=True,assigned_to=request.user).order_by('-id')[:5]
 
     mydict={
     'total_tasks':total_tasks,
-    'total_noti':total_noti
+    'total_noti':total_noti,
+    'notifications':notifications,
+    'seen_notifications':seened_noti,
     }
-    # return render(request,'hospital/patient_dashboard.html',context=mydict)
+
     return render(request,'employee_dashboard.html',context=mydict)
 
 # @login_required(login_url='adminlogin')
@@ -944,6 +950,11 @@ def task_detail(request,slug):
     task = get_object_or_404(models.Task,id=slug)
     rel_media = models.Task_Media.objects.filter(task_id=task.id,)
     task_cmt = models.Task_Comment.objects.filter(task_id=task.id)
+    noti = models.Notifications.objects.filter(assigned_to=request.user,is_seen=False,task_id=task)
+    for i in noti:
+        notification_seen = get_object_or_404(models.Notifications,id=i.id)
+        notification_seen.is_seen = True
+        notification_seen.save()
     if task.created_by==request.user:
         go='mytask'
     else:
@@ -960,6 +971,11 @@ def task_detail(request,slug):
 
                 print('comment')
                 models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
+                if comment:
+                    if task.created_by == request.user:
+                        noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.assigned_to,type="task_comment",task_id=task)
+                    else:
+                        noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.created_by,type="task_comment",task_id=task)
             dict={
                 'is_hr':is_Hr(request.user),
                 'task':task,
@@ -974,11 +990,19 @@ def task_detail(request,slug):
             if request.method=='POST':
                 status = request.POST.get('status')
                 completed = request.POST.get('Task')
+                print(completed)
                 comment = request.POST.get('comment')
                 task.status = status
                 task.completed =completed
                 task.save()
                 models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
+                if comment:
+                    if task.created_by == request.user:
+                        noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.assigned_to,type="task_comment",task_id=task)
+                    else:
+                        noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.created_by,type="task_comment",task_id=task)
+                if completed == "True":
+                    noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.created_by,type="task_complete",task_id=task)
             dict={
                 'is_hr':is_Hr(request.user),
                 'task':task,
@@ -999,5 +1023,56 @@ def assigned_task(request):
         'tasks':tasks
     }
     return render(request,'tasks/assigned_task_view.html',context=dict)
+@login_required(login_url='adminlogin')
+def edit_task_list(request):
+    tasks = models.Task.objects.filter(created_by=request.user).order_by('-id')
+    dict={
+        'tasks':tasks,
+        'is_hr':is_Hr(request.user),
+    }
+    return render(request,'tasks/edit_task_list.html',context=dict)
 
 
+@login_required(login_url='adminlogin')
+def Edit_task(request,slug):
+    task = get_object_or_404(models.Task,id=slug)
+    user = models.User.objects.filter()
+    users1=[]
+    users2=[]
+    for i in user:
+        if i!=request.user:
+            if i.groups.filter(name="EMPLOYEE").exists():
+                users1.append(i)
+            elif i.groups.filter(name="HR").exists():
+                users2.append(i)
+
+    users=[]
+    users=users1+users2
+    if request.user == task.created_by or request.user == task.assigned_to:
+
+        if request.method=='POST':
+            task_sub = request.POST.get('subject')
+            task_detail = request.POST.get('details')
+            assigned_to = request.POST.get('assigned')
+            usr = get_object_or_404(models.User,username=assigned_to)
+            created_by=request.user
+            due_date = request.POST.get('duedate')
+
+            task.task_subject = task_sub
+            task.task_detail=task_detail
+            if due_date:
+                task.due_date = due_date
+            task.assigned_to = usr
+            task.save()
+
+
+
+        mydict = {
+            'task':task,
+            'users':users
+        }
+
+        return render(request,'tasks/task_edit.html',context=mydict)
+    else:
+
+        return HttpResponse("you are not allow here")

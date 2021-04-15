@@ -45,11 +45,8 @@
 
 
 
-  <br><br><br>
-
-
-
-  <div class="row gutters-sm">
+  <br><br><br><br>
+<div class="row gutters-sm">
                 <div class="col-sm-6 mb-3">
                   <div class="card h-100">
                     <table class="table table-striped">
@@ -62,20 +59,26 @@
     </tr>
   </thead>
   <tbody>
+  {% for i in notifications %}
     <tr>
-      <td scope="row">You Have to update your profile properly <b>From</b> HR </td>
-
+      {% if i.type == "task_assigned" %}
+      <td scope="row">Task : {{i.assigned_by}} ({{i.assigned_by.first_name}} {{i.assigned_by.last_name}}) Assigned to you : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a>   <span class="badge badge-pill badge-danger" style="background-color:red">New</span></td>
+      {% elif i.type == "task_comment" %}
+      <td >Task : {{i.assigned_by}} ({{i.assigned_by.first_name}} {{i.assigned_by.last_name}}) Commented on Task : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a>  <span class="badge badge-pill badge-danger" style="background-color:red">New</span></td>
+      {% endif %}
 
     </tr>
+    {% endfor %}
+   {% for i in seen_notifications|slice:":4" %}
     <tr>
-      <td scope="row">Passport Ex</td>
-
+      {% if i.type == "task_assigned" %}
+      <td scope="row">Task : {{i.assigned_by}} ({{i.assigned_by.first_name}} {{i.assigned_by.last_name}}) Assigned to you : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a>   </td>
+      {% elif i.type == "task_comment" %}
+      <td >Task : {{i.assigned_by}} ({{i.assigned_by.first_name}} {{i.assigned_by.last_name}}) Commented on Task : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a> </td>
+      {% endif %}
 
     </tr>
-    <tr>
-      <td scope="row">name</td>
-
-    </tr>
+    {% endfor %}
   </tbody>
 </table>
                   </div>

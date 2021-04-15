@@ -60,8 +60,22 @@
     <tr>
       {% if i.type == "task_assigned" %}
       <td scope="row">Task : {{i.assigned_by}} ({{i.assigned_by.first_name}} {{i.assigned_by.last_name}}) Assigned to you : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a>   <span class="badge badge-pill badge-danger" style="background-color:red">New</span></td>
-      {% elif true %}
-      <td >sdjkshb</td>
+      {% elif i.type == "task_comment" %}
+      <td >Task : {{i.assigned_by}} ({{i.assigned_by.first_name}} {{i.assigned_by.last_name}}) Commented on Task : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a>  <span class="badge badge-pill badge-danger" style="background-color:red">New</span></td></td>
+      {% elif i.type == "task_complete" %}
+      <td >Task : {{i.assigned_to}} ({{i.assigned_to.first_name}} {{i.assigned_to.last_name}}) completed Task : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a>  <span class="badge badge-pill badge-danger" style="background-color:red">New</span></td></td>
+      {% endif %}
+
+    </tr>
+    {% endfor %}
+  {% for i in seen_notifications|slice:":5" %}
+    <tr>
+      {% if i.type == "task_assigned" %}
+      <td scope="row">Task : {{i.assigned_by}} ({{i.assigned_by.first_name}} {{i.assigned_by.last_name}}) Assigned to you : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a>  </td>
+      {% elif i.type == "task_comment" %}
+      <td >Task : {{i.assigned_by}} ({{i.assigned_by.first_name}} {{i.assigned_by.last_name}}) Commented on Task : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a></td></td>
+      {% elif i.type == "task_complete" %}
+      <td >Task : {{i.assigned_to}} ({{i.assigned_to.first_name}} {{i.assigned_to.last_name}}) completed Task : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a> </td></td>
       {% endif %}
 
     </tr>
