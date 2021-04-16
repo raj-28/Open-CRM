@@ -581,7 +581,6 @@ def start_session(request):
 
 
 @login_required(login_url='adminlogin')
-
 def end_session(request):
     if is_Employee(request.user):
         today = timezone.now().today().date()
@@ -615,6 +614,63 @@ def end_session(request):
 
         # duration = datetime.timedelta(end_time,start_time)
         obj.work_duration = duration
+        obj.present=True
+        obj.save()
+        return redirect('hr-add-attendance')
+
+@login_required(login_url='adminlogin')
+def lunch_break_start(request):
+    if is_Employee(request.user):
+        today = timezone.now().today().date()
+        obj=get_object_or_404(models.Attendance,attendance_date=today,user=request.user)
+        obj.start_lunch_break=timezone.now().time()
+        obj.present=True
+        obj.save()
+        return redirect('employee-attendance')
+    elif is_Hr(request.user):
+        today = timezone.now().today().date()
+        obj=get_object_or_404(models.Hr_Attendance,attendance_date=today,user=request.user)
+        obj.start_lunch_break=timezone.now().time()
+        obj.present=True
+        obj.save()
+        return redirect('hr-add-attendance')
+    else:
+        return HttpResponse("you are not eligible for this system")
+
+@login_required(login_url='adminlogin')
+def lunch_break_end_session(request):
+    if is_Employee(request.user):
+        today = timezone.now().today().date()
+        obj=get_object_or_404(models.Attendance,attendance_date=today,user=request.user)
+        obj.end_lunch_break=timezone.now().time()
+        date_format = "%H:%M:%S"
+        start_time = obj.start_lunch_break
+        end_time=timezone.now().time()
+        diff = datetime.combine(today,end_time)-datetime.combine(today,start_time)
+        duration = str(diff)
+        dur=duration.split('.')
+        duration=dur[0]+" "+"Hr"
+
+        # duration = datetime.timedelta(end_time,start_time)
+        obj.lunch_break_duration = duration
+        obj.present=True
+        obj.save()
+        return redirect('employee-attendance')
+    elif is_Hr(request.user):
+        today = timezone.now().today().date()
+        obj=get_object_or_404(models.Hr_Attendance,attendance_date=today,user=request.user)
+        obj.end_lunch_break=timezone.now().time()
+        obj.approved=True
+        date_format = "%H:%M:%S"
+        start_time = obj.start_lunch_break
+        end_time=timezone.now().time()
+        diff = datetime.combine(today,end_time)-datetime.combine(today,start_time)
+        duration = str(diff)
+        dur=duration.split('.')
+        duration=dur[0]+" "+"Hr"
+
+        # duration = datetime.timedelta(end_time,start_time)
+        obj.lunch_break_duration = duration
         obj.present=True
         obj.save()
         return redirect('hr-add-attendance')
@@ -969,7 +1025,7 @@ def task_detail(request,slug):
             if request.method == 'POST':
                 comment = request.POST.get('comment')
 
-                print('comment')
+
                 models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
                 if comment:
                     if task.created_by == request.user:

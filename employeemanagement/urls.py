@@ -54,6 +54,8 @@ urlpatterns = [
     path('start-session/', views.start_session,name='start-session'),
     path('end-session/', views.end_session,name='end-session'),
     path('employee-absent/<slug:slug>/', views.employee_absent,name='employee_absent'),
+    path('lunch-break-start/', views.lunch_break_start,name='lunch_break_start'),
+    path('lunch-break-end/', views.lunch_break_end_session,name='lunch_break_end_start'),
 
 
 

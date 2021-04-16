@@ -51,7 +51,7 @@
         <td>{% if p.present %} Present {% else %} Absent {% endif %}</td>
         <td>{% if p.present %} {{p.Start_time}} {% else %} - {% endif %}</td>
         <td>{% if p.present %} {{p.end_time}} {% else %} - {% endif %}</td>
-        <td>{% if p.work_duration %} {{p.work_duration}} {% else %} - {% endif %}</td>
+        <td>{% if p.work_duration %} {{p.work_duration}} (lunch:{{p.lunch_break_duration}}) {% else %} - {% endif %}</td>
         <td>{% if not p.present %}
           {% if p.approved %}
           <button type="button" class="btn btn-danger" disabled>Absent</button>
@@ -96,7 +96,7 @@
         <td>{% if p.present %} Present {% else %} Absent {% endif %}</td>
         <td>{% if p.present %} {{p.Start_time}} {% else %} - {% endif %}</td>
         <td>{% if p.present %} {{p.end_time}} {% else %} - {% endif %}</td>
-        <td>{% if p.work_duration %} {{p.work_duration}} {% else %} - {% endif %}</td>
+        <td>{% if p.work_duration %} {{p.work_duration}} (lunch:{{p.lunch_break_duration}}){% else %} - {% endif %}</td>
         <td>{% if not p.present %}
           <button type="button" class="btn btn-danger" disabled>Absent</button>
           {% else %}

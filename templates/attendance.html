@@ -60,6 +60,28 @@
 
 </td>
       </tr>
+
+      <tr>
+
+        <td colspan="5" >
+          <center>
+            Lunch Break :
+          {% if p.start_lunch_break and p.start_lunch_break is not null %}
+          <button type="button" class="btn btn-success" disabled>Started</button>
+          {% else %}
+          <a href="/lunch-break-start/"><button type="button" class="btn btn-success" >Start</button></a>
+          {% endif %}
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            End Break :
+            {% if p.end_lunch_break is not none or p.end_lunch_break is not null or p.start_lunch_break is null or p.start_lunch_break is none %}
+           <button type="button" class="btn btn-danger" disabled>End</button>
+          {% else %}
+          <a href="/lunch-break-end/"><button type="button" class="btn btn-danger">End</button></a>
+          {% endif %}
+          </center>
+</td>
+
+      </tr>
       {% endfor %}
     </table>
   </div>
@@ -90,7 +112,7 @@
         <td>{% if p.present %} Present {% else %} Absent {% endif %}</td>
         <td>{% if p.present %} {{p.Start_time}} {% else %} - {% endif %}</td>
         <td>{% if p.present %} {{p.end_time}} {% else %} - {% endif %}</td>
-        <td>{% if p.work_duration %} {{p.work_duration}} {% else %} - {% endif %}</td>
+        <td>{% if p.work_duration %} {{p.work_duration}} (lunch:{{p.lunch_break_duration}}) {% else %} - {% endif %}</td>
         {% if p.approved %} <td class="bg-success">Approved</td> {% else %} {% if p.present %} <td class="bg-danger">Pending</td> {% else %}<td> - </td> {% endif %}{% endif %}
       </tr>
       {% endfor %}
