@@ -292,20 +292,8 @@
   </nav>
   <main>
     <!-- nav start -->
-    <div class="bs-example">
-      <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background:#337AB7;">
-        <a href="/employee-dashboard" class="navbar-brand">Employee MANAGEMENT</a>
-        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-          <div class="navbar-nav" style=" margin-left: 90%;">
-
-            <h4 style="margin-left:5px; margin-top:6px; color:white; ">ID : {{user.username}}</h4>
-          </div>
-        </div>
-      </nav>
-    </div>
+    {% block nav %}
+    {% endblock nav %}
     <!-- nav end -->
     <br><br>
     <!-- content start-->

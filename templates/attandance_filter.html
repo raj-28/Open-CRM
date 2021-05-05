@@ -1,0 +1,132 @@
+{% extends 'hr_base.html' %}
+{% load static %}
+{% block nav %}
+<div class="bs-example">
+      <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background:#337AB7;">
+        <a href="" class="navbar-brand">REPORT ATTENDANCE</a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+          <div class="navbar-nav" style=" margin-left: 75%;">
+<img class="rounded-circle mt-1" src="/media/{{profile_pics.profile_pic}}" width="40" height="40"><span class="font-weight-bold">
+            <h4 style="margin-left:5px; margin-top:6px; color:white; ">ID : {{user.username}}</h4>
+
+<!--            <a href="/logout" class="nav-item nav-link">Logout</a>-->
+          </div>
+        </div>
+      </nav>
+    </div>
+{% endblock nav %}
+{% block content %}
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+  </style>
+</head>
+{%include 'attendance_base.html'%}
+
+<div class="container">
+
+  <div class="row">
+      <form method="post" action="/filter-by-date">
+          {%csrf_token%}
+    <div class="form-group form-success form-static-label">
+                                                                <input type="date" name="from" class="form-control" >
+                                                                <span class="form-bar"></span>
+                                                                <label class="float-label">From</label>
+                                                            </div>
+
+    <div class="form-group form-success form-static-label">
+                                                                <input type="date" name="end" class="form-control">
+                                                                <span class="form-bar"></span>
+                                                                <label class="float-label">End </label>
+                                                            </div>
+    <div class="col-sm-2">
+                                                                    <select name="status" class="form-control">
+                                                                        <option value="None">None</option>
+                                                                        <option value="P">Present</option>
+                                                                        <option value="a">Absent</option>
+
+                                                                    </select>
+                                                                </div>
+    <button type="submit" class="btn btn-primary" style="float:right;">Session Report</button>
+      </form>
+      <form method="post" action="/filter-by-month">
+                 {%csrf_token%}
+    <div class="col-sm-2">
+                                                                    <select name="month" class="form-control">
+                                                                        <option value="1">January</option>
+                                                                        <option value="2">February</option>
+                                                                        <option value="3">March</option>
+                                                                        <option value="4">April</option>
+                                                                        <option value="5">May</option>
+                                                                        <option value="6">June</option>
+                                                                        <option value="7">July</option>
+                                                                        <option value="8">August</option>
+                                                                        <option value="9">September</option>
+                                                                        <option value="10">October</option>
+                                                                        <option value="11">November</option>
+                                                                        <option value="12">December</option>
+
+                                                                    </select>
+                                                                </div>
+    <button type="submit" class="btn btn-primary" style="float:right;">Monthly Report</button>
+           </form>
+  </div>
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title"> {% if only %}{{from}} Report {% else %}{% if from or end %}Report from {{from}} to {{end}}{% else %}Attendance{% endif %}{% endif %} </h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Emp_ID</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Duration</th>
+          <th>Approved</th>
+
+        </tr>
+      </thead>
+      {% for p in allempattndnc %}
+      {% if p.present %}<tr>{% else %}<tr class="bg-danger">{% endif %}
+
+        <td> {{p.attendance_date}} ({{ p.attendance_date|date:"l" }})</td>
+        <td> {{p.user}}</td>
+        <td> {{p.user.first_name}} {{p.user.last_name}}</td>
+        <td>{% if p.present %} Present {% else %} Absent {% endif %}</td>
+        <td>{% if p.present %} {{p.Start_time}} {% else %} - {% endif %}</td>
+        <td>{% if p.present %} {{p.end_time}} {% else %} - {% endif %}</td>
+        <td>{% if p.work_duration %} {{p.work_duration}} (lunch:{{p.lunch_break_duration}}){% else %} - {% endif %}</td>
+        <td>{% if not p.present %}
+          <button type="button" class="btn btn-danger" disabled>Absent</button>
+          {% else %}
+          {% if p.approved %}<button type="button" class="btn btn-success" disabled>Approved </button>
+            {% else %} <a href="/hr-approved/{{p.user.id}}_{{ p.attendance_date|date:'Y-m-d' }}/"><button type="button" class="btn btn-danger">Approve</button></a> {% endif %}
+        {% endif %}</td>
+
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock content %}

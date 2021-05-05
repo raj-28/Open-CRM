@@ -1,4 +1,23 @@
 {% extends is_hr|yesno:"hr_base.html,employee_base.html" %}
+
+{% block nav %}
+<div class="bs-example">
+      <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background:#337AB7;">
+        <a href="" class="navbar-brand">MY TASKS</a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+          <div class="navbar-nav" style=" margin-left: 75%;">
+<img class="rounded-circle mt-1" src="/media/{{profile_pics.profile_pic}}" width="40" height="40"><span class="font-weight-bold">
+            <h4 style="margin-left:5px; margin-top:6px; color:white; ">ID : {{user.username}}</h4>
+
+<!--            <a href="/logout" class="nav-item nav-link">Logout</a>-->
+          </div>
+        </div>
+      </nav>
+    </div>
+{% endblock nav %}
 {% block content %}
 {%load static%}
 
@@ -38,18 +57,18 @@
   <div class="panel panel-primary">
 
     <div class="panel-heading">
-      <h6 class="panel-title">Your Total Tasks List</h6>
+      <h6 class="panel-title">{{request.user.username}}({{request.user.first_name}} {{user.last_name}}) Created Tasks</h6>
     </div>
     <table class="table table-bordered" id="dev-table">
       <thead>
         <tr>
           <th>Task_ID</th>
           <th>Assigned To</th>
-          <th>DATE</th>
+          <th>ADD DATE</th>
           <th>TASK SUBJECT</th>
           <th>DETAILS</th>
           <th>DUE DATE</th>
-          <th>COMPLETED</th>
+          <th>STATUS</th>
 
         </tr>
       </thead>

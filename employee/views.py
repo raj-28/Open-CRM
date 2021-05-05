@@ -322,6 +322,98 @@ def hr_view_employee_attendance(request):
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_Hr)
+def filter_by_date(request):
+    today = timezone.now().today().date()
+    empattendance=models.Attendance.objects.filter(attendance_date=today,user=request.user)
+    attendance=models.Attendance.objects.filter().order_by('-attendance_date')
+    atendlist=[]
+    if request.method == "POST":
+        start = request.POST.get('from')
+        end = request.POST.get('end')
+        status = request.POST.get('status')
+        print("pass")
+        if status == 'p':
+            empattendance=models.Attendance.objects.filter(attendance_date__range=[str(start), str(end)],present=True)
+        elif status == 'a':
+            empattendance=models.Attendance.objects.filter(attendance_date__range=[str(start), str(end)],present=False)
+        else:
+            empattendance=models.Attendance.objects.filter(attendance_date__range=[str(start), str(end)])
+            print(empattendance)
+        dict={
+
+            'allempattndnc':empattendance,
+            'from':start,
+            'end':end,
+
+        }
+        return render(request,'attandance_filter.html',context=dict)
+@login_required(login_url='adminlogin')
+@user_passes_test(is_Hr)
+def filter_by_month(request):
+    today = timezone.now().today().date()
+    atendlist=[]
+    month="January"
+    if request.method == "POST":
+        month_no = request.POST.get('month')
+        empattendance=models.Attendance.objects.filter(attendance_date__month=month_no)
+        if month_no=="1":
+            month="January"
+        elif month_no=="2":
+            month="February"
+        elif month_no=="3":
+            month="March"
+        elif month_no=="4":
+            month="April"
+        elif month_no=="5":
+            month="May"
+        elif month_no=="6":
+            month="June"
+        elif month_no=="7":
+            month="July"
+        elif month_no=="8":
+            month="August"
+        elif month_no=="9":
+            month="September"
+        elif month_no=="10":
+            month="October"
+        elif month_no=="11":
+            month="November"
+        elif month_no=="11":
+            month="December"
+
+        dict={
+
+            'allempattndnc':empattendance,
+            'from':month,
+            'only':True
+
+
+        }
+        return render(request,'attandance_filter.html',context=dict)
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_Hr)
+def filter_attendance(request):
+    today = timezone.now().today().date()
+    empattendance=models.Attendance.objects.filter(attendance_date=today)
+    attendance=models.Attendance.objects.filter().order_by('-attendance_date')
+    atendlist=[]
+    for i in attendance:
+        if i.attendance_date==today:
+            print("pass")
+        elif i.attendance_date<today:
+            atendlist.append(i)
+    dict={
+        'empattendance':{},
+
+        'allempattndnc':{},
+    }
+    return render(request,'attandance_filter.html',context=dict)
+
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_Hr)
 def hr_approved(request,slug):
     today = timezone.now().today().date()
     date=slug.split('_')
