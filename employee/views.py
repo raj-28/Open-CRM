@@ -332,7 +332,7 @@ def filter_by_date(request):
         end = request.POST.get('end')
         status = request.POST.get('status')
         print("pass")
-        if status == 'p':
+        if status == 'P':
             empattendance=models.Attendance.objects.filter(attendance_date__range=[str(start), str(end)],present=True)
         elif status == 'a':
             empattendance=models.Attendance.objects.filter(attendance_date__range=[str(start), str(end)],present=False)

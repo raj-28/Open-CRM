@@ -46,13 +46,13 @@
       <form method="post" action="/filter-by-date">
           {%csrf_token%}
     <div class="form-group form-success form-static-label">
-                                                                <input type="date" name="from" class="form-control" >
+                                                                <input type="date" name="from" class="form-control" required>
                                                                 <span class="form-bar"></span>
                                                                 <label class="float-label">From</label>
                                                             </div>
 
     <div class="form-group form-success form-static-label">
-                                                                <input type="date" name="end" class="form-control">
+                                                                <input type="date" name="end" class="form-control" required>
                                                                 <span class="form-bar"></span>
                                                                 <label class="float-label">End </label>
                                                             </div>
@@ -69,7 +69,7 @@
       <form method="post" action="/filter-by-month">
                  {%csrf_token%}
     <div class="col-sm-2">
-                                                                    <select name="month" class="form-control">
+                                                                    <select name="month" class="form-control" required>
                                                                         <option value="1">January</option>
                                                                         <option value="2">February</option>
                                                                         <option value="3">March</option>
