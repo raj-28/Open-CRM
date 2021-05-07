@@ -82,7 +82,7 @@
         <td>{{task.task_detail}}</td>
         <td>{% if task.due_date == None %}-{% else %}{{task.due_date}}{% endif %}</td>
         <td>{% if task.status == None %}Pending {% else %}{% if task.completed %}Completed {% else %}In Progress{% endif %}{% endif %}</td>
-        <td>{% if task.Commitment %}<a href="/uncommit/{{task.id}}"><button type="button" class="btn btn-success">Commited</button></a>{% else %}
+        <td>{% if task.Commitment %}<a href="/uncommit/{{task.id}}"><button type="button" class="btn btn-success">Committed</button></a>{% else %}
           <a href="/commit/{{task.id}}"><button type="button" class="btn btn-default">Commit</button></a></td>{% endif %}
       </tr>
       {% endfor %}
