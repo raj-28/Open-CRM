@@ -1027,10 +1027,9 @@ def create_task(request):
     users1=[]
     users2=[]
     for i in user:
-        if i!=request.user:
-            if i.groups.filter(name="EMPLOYEE").exists():
+        if i.groups.filter(name="EMPLOYEE").exists():
                 users1.append(i)
-            elif i.groups.filter(name="HR").exists():
+        elif i.groups.filter(name="HR").exists():
                 users2.append(i)
 
     users=[]
@@ -1114,16 +1113,34 @@ def task_detail(request,slug):
             else:
                 responsed_media.append(i)
         if task.created_by==request.user:
-            if request.method == 'POST':
-                comment = request.POST.get('comment')
+            if task.assigned_to == request.user:
+                if request.method=='POST':
+                    status = request.POST.get('status')
+                    completed = request.POST.get('Task')
+                    print(completed)
+                    comment = request.POST.get('comment')
+                    task.status = status
+                    task.completed =completed
+                    task.save()
+                    models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
+                    if comment:
+                        if task.created_by == request.user:
+                            noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.assigned_to,type="task_comment",task_id=task)
+                        else:
+                            noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.created_by,type="task_comment",task_id=task)
+                    if completed == "True":
+                        noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.created_by,type="task_complete",task_id=task)
+            else:
+                if request.method == 'POST':
+                    comment = request.POST.get('comment')
 
 
-                models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
-                if comment:
-                    if task.created_by == request.user:
-                        noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.assigned_to,type="task_comment",task_id=task)
-                    else:
-                        noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.created_by,type="task_comment",task_id=task)
+                    models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
+                    if comment:
+                        if task.created_by == request.user:
+                            noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.assigned_to,type="task_comment",task_id=task)
+                        else:
+                            noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=task.created_by,type="task_comment",task_id=task)
             dict={
                 'is_hr':is_Hr(request.user),
                 'task':task,
@@ -1133,6 +1150,7 @@ def task_detail(request,slug):
                 'task_cmt':task_cmt,
                 'checkuser':go
             }
+
             return render(request,'tasks/task_detail.html',context=dict)
         else:
             if request.method=='POST':
@@ -1165,7 +1183,7 @@ def task_detail(request,slug):
 
 @login_required(login_url='adminlogin')
 def assigned_task(request):
-    tasks = models.Task.objects.filter(assigned_to=request.user).order_by('-id')
+    tasks = models.Task.objects.filter(assigned_to=request.user,completed=False).order_by('-id')
     dict={
         'is_hr':is_Hr(request.user),
         'tasks':tasks
@@ -1224,3 +1242,32 @@ def Edit_task(request,slug):
     else:
 
         return HttpResponse("you are not allow here")
+
+@login_required(login_url='adminlogin')
+def commit(request,slug):
+    tasks = get_object_or_404(models.Task,id=slug)
+    tasks.Commitment = True
+    tasks.save()
+    return redirect('assigned-task')
+
+@login_required(login_url='adminlogin')
+def uncommit(request,slug):
+    tasks = get_object_or_404(models.Task,id=slug)
+    tasks.Commitment = False
+    tasks.save()
+    return redirect('assigned-task')
+
+@login_required(login_url='adminlogin')
+def completed_task(request):
+    tasks = models.Task.objects.filter(assigned_to=request.user,completed=True)
+    if is_Hr(request.user):
+        dict={
+            'tasks':tasks,
+            'is_hr':True
+        }
+    else:
+        dict={
+            'tasks':tasks,
+            'is_hr':False
+        }
+    return render(request,'tasks/completed_task.html',context=dict)

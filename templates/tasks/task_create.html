@@ -61,6 +61,12 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="lastname">Created By:</label>
+					<div class="col-md-8 col-sm-8 col-xs-8">
+						<input  class="form-control" id="ds" placeholder="Task Descreption" name="details" value="{{request.user.username}}" disabled>
+					</div>
+				</div>
+				<div class="form-group">
 					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="lastname">Assigned To:</label>
 					<div class="col-md-8 col-sm-8 col-xs-8">
 						<select name = "assigned" class="form-control" required placeholder="assigned to">

@@ -80,7 +80,7 @@
         <td><a href="/task/{{task.id}}">{{task.task_subject}}</a></td>
         <td>{{task.task_detail}}</td>
         <td>{{task.due_date}}</td>
-        <td>{{task.completed}}</td>
+        <td>{% if task.status == None %}Pending {% else %}{% if task.completed %}Completed {% else %}In Progress{% endif %}{% endif %}</td>
       </tr>
       {% endfor %}
 

@@ -80,6 +80,9 @@ urlpatterns = [
     path('assigned-task',views.assigned_task,name='assigned-task'),
     path('edit-task/',views.edit_task_list,name='edit-task-list'),
     path('edit-task/<slug:slug>/',views.Edit_task,name='edit-task'),
+    path('commit/<slug:slug>/',views.commit,name='commit'),
+    path('uncommit/<slug:slug>/',views.uncommit,name='uncommit'),
+    path('completed-task',views.completed_task,name='completed_task'),
 
 
 ]

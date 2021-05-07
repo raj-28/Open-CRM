@@ -158,6 +158,7 @@ class Task(models.Model):
     status = models.CharField(max_length=10,blank=True,null=True)
     completed = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
+    Commitment = models.BooleanField(default=False)
     due_date = models.DateField(blank=True,null=True)
     created_at = models.DateField(blank=True,null=True,auto_now_add=True)
 

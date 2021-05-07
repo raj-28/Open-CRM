@@ -46,7 +46,7 @@
             <ol class="breadcrumb">
               <li class="breadcrumb-item">{% if is_hr %}<a href="/hr-dashboard">Dashboard</a>{% else %}<a href="/employee-dashboard">Dashboard</a>{% endif %}</li>
               <li class="breadcrumb-item "><a href="/task-view">Task-view</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Assigned-Task</li>
+              <li class="breadcrumb-item active" aria-current="page">Completed-Task</li>
             </ol>
           </nav>
 
@@ -57,7 +57,7 @@
   <div class="panel panel-primary">
 
     <div class="panel-heading">
-      <h6 class="panel-title">{{request.user.username}}({{request.user.first_name}} {{user.last_name}}) Assigned Tasks</h6>
+      <h6 class="panel-title">Task Completed By {{request.user.username}}({{request.user.first_name}} {{user.last_name}}) </h6>
     </div>
     <table class="table table-bordered" id="dev-table">
       <thead>
@@ -69,7 +69,7 @@
           <th>DETAILS</th>
           <th>DUE DATE</th>
           <th>STATUS</th>
-          <th>Commitment</th>
+
 
         </tr>
       </thead>
@@ -81,10 +81,10 @@
         <td><a href="/task/{{task.id}}">{{task.task_subject}}</a></td>
         <td>{{task.task_detail}}</td>
         <td>{% if task.due_date == None %}-{% else %}{{task.due_date}}{% endif %}</td>
-        <td>{% if task.status == None %}Pending {% else %}{% if task.completed %}Completed {% else %}In Progress{% endif %}{% endif %}</td>
-        <td>{% if task.Commitment %}<a href="/uncommit/{{task.id}}"><button type="button" class="btn btn-success">Commited</button></a>{% else %}
-          <a href="/commit/{{task.id}}"><button type="button" class="btn btn-default">Commit</button></a></td>{% endif %}
-      </tr>
+        <td>{% if task.status == None %}Pending{% else %}{% if task.completed %}Completed {% else %}In Progress{% endif %}{% endif %}</td>
+<!--        <td>{% if task.Commitment %}<a href="/uncommit/{{task.id}}"><button type="button" class="btn btn-success">Un-Commit</button></a>{% else %}-->
+<!--          <a href="/commit/{{task.id}}"><button type="button" class="btn btn-success">Commit</button></a></td>{% endif %}-->
+<!--      </tr>-->
       {% endfor %}
 
 
