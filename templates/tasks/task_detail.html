@@ -81,12 +81,12 @@
 
 
 
-      <tr >
-        <th>Detail </th>
-        <td> :</td>
-        <td>{{task.task_detail}}</td>
+<!--      <tr >-->
+<!--        <th>Detail </th>-->
+<!--        <td> :</td>-->
+<!--        <td>{{task.task_detail}}</td>-->
 
-      </tr>
+<!--      </tr>-->
 
       <tr >
         <th >Due Date</th>
@@ -95,67 +95,67 @@
 
       </tr>
 
-      <tr >
-        <th>Progress</th>
-        <td> :</td>
-        <td>{{task.status}}</td>
+<!--      <tr >-->
+<!--        <th>Progress</th>-->
+<!--        <td> :</td>-->
+<!--        <td>{{task.status}}</td>-->
 
-      </tr>
+<!--      </tr>-->
 
-      <tr >
-        <th>Completed</th>
-        <td> :</td>
-        <td>{{task.completed}}</td>
+<!--      <tr >-->
+<!--        <th>Completed</th>-->
+<!--        <td> :</td>-->
+<!--        <td>{{task.completed}}</td>-->
 
-      </tr>
+<!--      </tr>-->
 
     </table>
 
   </div>
 
   <br><br>
-  <div class="panel panel-primary">
+<!--  <div class="panel panel-primary">-->
 
-    <div class="panel-heading">
-      <h6 class="panel-title">Related Media</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-      <tr >
-        <td colspan="3">Assigned Media :</td>
-      </tr>
-      {% for i in assigned_media %}
-        <tr>
-          <th><a href="{{i.media.url}}" download><button type="submit" class="btn btn-primary">Download File</button></a></th>
-          <td>:</td>
-          <td>{{i.description}} </td>
-
-
-        </tr>
-      {% endfor %}
-      <tr >
-        <td colspan="3">Responsed Media :</td>
-      </tr>
-      {% for i in responsed_media %}
-      <tr>
-          <th><a href="{{i.media.url}}" download><button type="submit" class="btn btn-primary">Download File</button></a></th>
-          <td>:</td>
-          <td>{{i.description}} </td>
+<!--    <div class="panel-heading">-->
+<!--      <h6 class="panel-title">Related Media</h6>-->
+<!--    </div>-->
+<!--    <table class="table table-hover" id="dev-table">-->
+<!--      <thead>-->
+<!--      <tr >-->
+<!--        <td colspan="3">Assigned Media :</td>-->
+<!--      </tr>-->
+<!--      {% for i in assigned_media %}-->
+<!--        <tr>-->
+<!--          <th><a href="{{i.media.url}}" download><button type="submit" class="btn btn-primary">Download File</button></a></th>-->
+<!--          <td>:</td>-->
+<!--          <td>{{i.description}} </td>-->
 
 
-        </tr>
-      {% endfor %}
+<!--        </tr>-->
+<!--      {% endfor %}-->
+<!--      <tr >-->
+<!--        <td colspan="3">Responsed Media :</td>-->
+<!--      </tr>-->
+<!--      {% for i in responsed_media %}-->
+<!--      <tr>-->
+<!--          <th><a href="{{i.media.url}}" download><button type="submit" class="btn btn-primary">Download File</button></a></th>-->
+<!--          <td>:</td>-->
+<!--          <td>{{i.description}} </td>-->
 
 
-
-      </thead>
+<!--        </tr>-->
+<!--      {% endfor %}-->
 
 
 
+<!--      </thead>-->
 
-    </table>
 
-  </div>
+
+
+<!--    </table>-->
+
+<!--  </div>-->
 
   <br><br>
   <div class="panel panel-primary">
@@ -168,13 +168,13 @@
       {% csrf_token %}
     <table class="table table-hover" id="dev-table">
       <thead>
-        <tr>
-          <th>Status</th>
-          <td>:</td>
-          <td><input type="text" placeholder="70% completed" required name="status"> </td>
+<!--        <tr>-->
+<!--          <th>Status</th>-->
+<!--          <td>:</td>-->
+<!--          <td><input type="text" placeholder="70% completed" required name="status"> </td>-->
 
 
-        </tr>
+<!--        </tr>-->
       </thead>
 
 
@@ -184,8 +184,8 @@
         <td> :</td>
         <td><input type="radio" id="Yes" name="Task" value="True" required>
             <label for="Yes">Yes</label><br>
-            <input type="radio" id="No" name="Task" value="False" required>
-            <label for="No">No</label><br>  </td>
+<!--            <input type="radio" id="No" name="Task" value="False" required>-->
+<!--            <label for="No">No</label><br></td>-->
 
       </tr>
       <tr >
@@ -197,7 +197,7 @@
 
       <tr >
         <th colspan="3" style="text-align:center"><button type="submit" class="btn btn-success">Submit</button>
-          <a href="/add-media/{{task.id}}"><button type="button" class="btn btn-primary">Add Media</button></a>
+<!--          <a href="/add-media/{{task.id}}"><button type="button" class="btn btn-primary">Add Media</button></a>-->
         </th>
 
 
@@ -229,7 +229,7 @@
        {% for i in task_cmt %}
       <thead>
         <tr>
-          <th>{{i.user}}</th>
+          <th>{{i.user}} {{i.created}}</th>
           <td>:</td>
           <td>{{i.comment}}</td>
 
@@ -244,7 +244,8 @@
         <th ><textarea placeholder="Comment here" name="comment" required></textarea></th>
         <td> :</td>
 
-        <th><button type="submit" class="btn btn-success">Submit</button> <a href="/add-media/{{task.id}}"><button type="button" class="btn btn-primary">Add Media</button></a></th>
+        <th><button type="submit" class="btn btn-success">Submit</button>
+<!--          <a href="/add-media/{{task.id}}"><button type="button" class="btn btn-primary">Add Media</button></a></th>-->
 
 
       </tr>
@@ -261,13 +262,13 @@
       {% csrf_token %}
     <table class="table table-hover" id="dev-table">
       <thead>
-        <tr>
-          <th>Status</th>
-          <td>:</td>
-          <td><input type="text" placeholder="70% completed" required name="status"> </td>
+<!--        <tr>-->
+<!--          <th>Status</th>-->
+<!--          <td>:</td>-->
+<!--          <td><input type="text" placeholder="70% completed" required name="status"> </td>-->
 
 
-        </tr>
+<!--        </tr>-->
       </thead>
 
 
@@ -275,22 +276,22 @@
       <tr >
         <th >completed</th>
         <td> :</td>
-        <td><input type="radio" id="Yes" name="Task" value="True" required>
+        <td><input type="radio" id="Yes" name="Task" value="True">
             <label for="Yes">Yes</label><br>
-            <input type="radio" id="No" name="Task" value="False" required>
-            <label for="No">No</label><br>  </td>
+<!--            <input type="radio" id="No" name="Task" value="False" required>-->
+<!--            <label for="No">No</label><br>  </td>-->
 
       </tr>
       <tr >
         <th >Your Comment</th>
         <td> :</td>
-        <td><textarea placeholder="Comment here" name="comment"></textarea></td>
+        <td><textarea placeholder="Comment here" name="comment" required></textarea></td>
 
       </tr>
 
       <tr >
         <th colspan="3" style="text-align:center"><button type="submit" class="btn btn-success">Submit</button>
-          <a href="/add-media/{{task.id}}"><button type="button" class="btn btn-primary">Add Media</button></a>
+<!--          <a href="/add-media/{{task.id}}"><button type="button" class="btn btn-primary">Add Media</button></a>-->
         </th>
 
 
@@ -303,7 +304,7 @@
       {% for i in task_cmt %}
 
         <tr>
-          <th>{{i.user}}</th>
+          <th>{{i.user}} {{i.created}}</th>
           <td>:</td>
           <td>{{i.comment}}</td>
 

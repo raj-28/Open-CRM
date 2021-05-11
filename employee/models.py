@@ -179,7 +179,7 @@ class Task_Comment(models.Model):
     task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task_id')
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user')
     comment = models.TextField(blank=True,null=True)
-    created = models.DateField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):

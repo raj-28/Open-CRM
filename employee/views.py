@@ -1037,20 +1037,20 @@ def create_task(request):
 
     if request.method=='POST':
         task_sub = request.POST.get('subject')
-        task_detail = request.POST.get('details')
+        # task_detail = request.POST.get('details')
         assigned_to = request.POST.get('assigned')
         usr = get_object_or_404(models.User,username=assigned_to)
         created_by=request.user
         due_date = request.POST.get('duedate')
 
         if due_date=="":
-            task=models.Task.objects.create(created_by=created_by,assigned_to=usr,task_subject=task_sub,task_detail=task_detail,)
+            task=models.Task.objects.create(created_by=created_by,assigned_to=usr,task_subject=task_sub,)
             print(task.id)
         else:
-            task=models.Task.objects.create(created_by=created_by,assigned_to=usr,task_subject=task_sub,task_detail=task_detail,due_date=due_date)
+            task=models.Task.objects.create(created_by=created_by,assigned_to=usr,task_subject=task_sub,due_date=due_date)
         task_id=get_object_or_404(models.Task,id=task.id)
         noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=usr,type="task_assigned",task_id=task_id)
-        return redirect('add-media',task_id.id)
+        return redirect('details',task_id.id)
 
 
     dict={
@@ -1096,7 +1096,7 @@ def task_detail(request,slug):
     responsed_media=[]
     task = get_object_or_404(models.Task,id=slug)
     rel_media = models.Task_Media.objects.filter(task_id=task.id,)
-    task_cmt = models.Task_Comment.objects.filter(task_id=task.id)
+    task_cmt = models.Task_Comment.objects.filter(task_id=task.id).order_by('-id')
     noti = models.Notifications.objects.filter(assigned_to=request.user,is_seen=False,task_id=task)
     for i in noti:
         notification_seen = get_object_or_404(models.Notifications,id=i.id)
@@ -1115,12 +1115,14 @@ def task_detail(request,slug):
         if task.created_by==request.user:
             if task.assigned_to == request.user:
                 if request.method=='POST':
-                    status = request.POST.get('status')
+                    # status = request.POST.get('status')
                     completed = request.POST.get('Task')
                     print(completed)
                     comment = request.POST.get('comment')
-                    task.status = status
-                    task.completed =completed
+                    if completed == "None":
+                        print("hello")
+                    else:
+                        task.completed =completed
                     task.save()
                     models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
                     if comment:
@@ -1154,12 +1156,14 @@ def task_detail(request,slug):
             return render(request,'tasks/task_detail.html',context=dict)
         else:
             if request.method=='POST':
-                status = request.POST.get('status')
+
                 completed = request.POST.get('Task')
                 print(completed)
                 comment = request.POST.get('comment')
-                task.status = status
-                task.completed =completed
+                if completed == None:
+                        print("hello")
+                else:
+                    task.completed =completed
                 task.save()
                 models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
                 if comment:

@@ -66,24 +66,26 @@
           <th>Created By</th>
           <th>ADD DATE</th>
           <th>TASK SUBJECT</th>
-          <th>DETAILS</th>
+<!--          <th>DETAILS</th>-->
           <th>DUE DATE</th>
           <th>STATUS</th>
           <th>Commitment</th>
+          <th>Follow</th>
 
         </tr>
       </thead>
       {% for task in tasks%}
       <tr >
-        <td ><a href="/task/{{task.id}}"> {{task.id}}</a></td>
+        <td >{{task.id}}</td>
         <td >{{task.created_by}} </td>
         <td> {{task.created_at}}</td>
-        <td><a href="/task/{{task.id}}">{{task.task_subject}}</a></td>
-        <td>{{task.task_detail}}</td>
+        <td>{{task.task_subject}}</td>
+<!--        <td>{{task.task_detail}}</td>-->
         <td>{% if task.due_date == None %}-{% else %}{{task.due_date}}{% endif %}</td>
         <td>{% if task.status == None %}Pending {% else %}{% if task.completed %}Completed {% else %}In Progress{% endif %}{% endif %}</td>
         <td>{% if task.Commitment %}<a href="/uncommit/{{task.id}}"><button type="button" class="btn btn-success">Committed</button></a>{% else %}
           <a href="/commit/{{task.id}}"><button type="button" class="btn btn-default">Commit</button></a></td>{% endif %}
+        <td ><a href="/task/{{task.id}}"><button type="submit" class="btn btn-default">Task Detail</button></a></td>
       </tr>
       {% endfor %}
 
