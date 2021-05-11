@@ -1115,14 +1115,17 @@ def task_detail(request,slug):
         if task.created_by==request.user:
             if task.assigned_to == request.user:
                 if request.method=='POST':
-                    # status = request.POST.get('status')
+                    status = "10%"
                     completed = request.POST.get('Task')
                     print(completed)
                     comment = request.POST.get('comment')
-                    if completed == "None":
+                    if completed == None:
                         print("hello")
+                        task.status=status
+
                     else:
                         task.completed =completed
+
                     task.save()
                     models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
                     if comment:
@@ -1156,12 +1159,15 @@ def task_detail(request,slug):
             return render(request,'tasks/task_detail.html',context=dict)
         else:
             if request.method=='POST':
-
+                # status= "10%"
                 completed = request.POST.get('Task')
                 print(completed)
                 comment = request.POST.get('comment')
                 if completed == None:
                         print("hello")
+
+                        task.completed=False
+
                 else:
                     task.completed =completed
                 task.save()
@@ -1275,3 +1281,79 @@ def completed_task(request):
             'is_hr':False
         }
     return render(request,'tasks/completed_task.html',context=dict)
+
+
+
+@login_required(login_url='adminlogin')
+def download_assigned_task_report(request):
+    tasks = models.Task.objects.filter(assigned_to=request.user,completed=False).order_by('-id')
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="tasks_({})_({} {}).csv"'.format(request.user,request.user.first_name,request.user.last_name)
+
+    writer = csv.writer(response)
+    writer.writerow([' Task Assigned To username:{} ({} {})'.format(request.user, request.user.first_name,request.user.last_name),])
+    writer.writerow([""])
+
+    writer.writerow(['Task ID', 'Created By', 'Created Date', 'Task Subject','Due Date', 'Status', ])
+
+
+    for task in tasks:
+        if task.status == "" or task.status == None:
+            status = "pending"
+        else:
+            status="In Progress"
+        writer.writerow([task.id, task.created_by, task.created_at, task.task_subject, task.due_date, status,])
+
+
+    return response
+
+
+@login_required(login_url='adminlogin')
+def download_created_task_report(request):
+    tasks = models.Task.objects.filter(created_by=request.user,completed=False).order_by('-id')
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="tasks_({})_({} {}).csv"'.format(request.user,request.user.first_name,request.user.last_name)
+
+    writer = csv.writer(response)
+    writer.writerow([' Task created by  username:{} ({} {})'.format(request.user, request.user.first_name,request.user.last_name),])
+    writer.writerow([""])
+
+    writer.writerow(['Task ID', 'assigned to', 'Created Date', 'Task Subject','Due Date', 'Status', ])
+
+
+    for task in tasks:
+        if task.status == "" or task.status == None:
+            status = "pending"
+        else:
+            status="In Progress"
+        writer.writerow([task.id, task.assigned_to, task.created_at, task.task_subject, task.due_date, status,])
+
+
+    return response
+
+
+@login_required(login_url='adminlogin')
+def download_completed_task_report(request):
+    tasks = models.Task.objects.filter(assigned_to=request.user,completed=True).order_by('-id')
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="tasks_({})_({} {}).csv"'.format(request.user,request.user.first_name,request.user.last_name)
+
+    writer = csv.writer(response)
+    writer.writerow([' Task completed by username:{} ({} {})'.format(request.user, request.user.first_name,request.user.last_name),])
+    writer.writerow([""])
+
+    writer.writerow(['Task ID', 'Created By', 'Created Date', 'Task Subject','Due Date', 'Status', ])
+
+
+    for task in tasks:
+        status = "Completed"
+        writer.writerow([task.id, task.created_by, task.created_at, task.task_subject, task.due_date, status,])
+
+
+    return response

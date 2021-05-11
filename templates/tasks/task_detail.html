@@ -182,8 +182,8 @@
       <tr >
         <th >completed</th>
         <td> :</td>
-        <td><input type="radio" id="Yes" name="Task" value="True" required>
-            <label for="Yes">Yes</label><br>
+        <td><input type="radio" id="Yes" name="Task" value="True">
+            <label for="Yes">Yes</label><br> <span>(only click when the task is completed*)</span>
 <!--            <input type="radio" id="No" name="Task" value="False" required>-->
 <!--            <label for="No">No</label><br></td>-->
 
@@ -210,9 +210,9 @@
       {% for i in task_cmt %}
 
         <tr>
-          <th>{{i.user}}</th>
+          <th>{{i.user}} {{i.created}}</th>
           <td>:</td>
-          <td>{{i.comment}}</td>
+          <td>{{i.comment}} </td>
 
 
         </tr>
@@ -277,7 +277,7 @@
         <th >completed</th>
         <td> :</td>
         <td><input type="radio" id="Yes" name="Task" value="True">
-            <label for="Yes">Yes</label><br>
+            <label for="Yes">Yes</label><br><span>(only click when the task is completed*)</span>
 <!--            <input type="radio" id="No" name="Task" value="False" required>-->
 <!--            <label for="No">No</label><br>  </td>-->
 
