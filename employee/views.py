@@ -890,7 +890,12 @@ def edit_personal_info(request):
             emp.nationality=request.POST.get('nationality')
 
             emp.religion=request.POST.get('religion')
-            emp.marital_status=request.POST.get('meritalstatus')
+            merital = request.POST.get('meritalstatus')
+            if merital=="UnMarried":
+
+                emp.marital_status=False
+            else:
+                emp.merital_status=True
             emp.email_id=request.POST.get('email')
             emp.contact_no=request.POST.get('mobileno')
             emp.guardian_name=request.POST.get('gardianname')
@@ -1050,7 +1055,7 @@ def create_task(request):
             task=models.Task.objects.create(created_by=created_by,assigned_to=usr,task_subject=task_sub,due_date=due_date)
         task_id=get_object_or_404(models.Task,id=task.id)
         noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=usr,type="task_assigned",task_id=task_id)
-        return redirect('details',task_id.id)
+        return render(request,'tasks/task_create.html',context={'created':True})
 
 
     dict={
@@ -1125,6 +1130,7 @@ def task_detail(request,slug):
 
                     else:
                         task.completed =completed
+                        task.status=status
 
                     task.save()
                     models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
@@ -1159,7 +1165,7 @@ def task_detail(request,slug):
             return render(request,'tasks/task_detail.html',context=dict)
         else:
             if request.method=='POST':
-                # status= "10%"
+                status= "10%"
                 completed = request.POST.get('Task')
                 print(completed)
                 comment = request.POST.get('comment')
@@ -1167,9 +1173,11 @@ def task_detail(request,slug):
                         print("hello")
 
                         task.completed=False
+                        task.status=status
 
                 else:
                     task.completed =completed
+                    task.status =status
                 task.save()
                 models.Task_Comment.objects.create(task_id=task,comment=comment,user=request.user)
                 if comment:
@@ -1193,7 +1201,7 @@ def task_detail(request,slug):
 
 @login_required(login_url='adminlogin')
 def assigned_task(request):
-    tasks = models.Task.objects.filter(assigned_to=request.user,completed=False).order_by('-id')
+    tasks = models.Task.objects.filter(assigned_to=request.user,active=True).order_by('-id')
     dict={
         'is_hr':is_Hr(request.user),
         'tasks':tasks
@@ -1228,14 +1236,14 @@ def Edit_task(request,slug):
 
         if request.method=='POST':
             task_sub = request.POST.get('subject')
-            task_detail = request.POST.get('details')
+            # task_detail = request.POST.get('details')
             assigned_to = request.POST.get('assigned')
             usr = get_object_or_404(models.User,username=assigned_to)
             created_by=request.user
             due_date = request.POST.get('duedate')
 
             task.task_subject = task_sub
-            task.task_detail=task_detail
+            # task.task_detail=task_detail
             if due_date:
                 task.due_date = due_date
             task.assigned_to = usr
@@ -1269,7 +1277,7 @@ def uncommit(request,slug):
 
 @login_required(login_url='adminlogin')
 def completed_task(request):
-    tasks = models.Task.objects.filter(assigned_to=request.user,completed=True)
+    tasks = models.Task.objects.filter(assigned_to=request.user,completed=True, active=False).order_by('-id')
     if is_Hr(request.user):
         dict={
             'tasks':tasks,
@@ -1355,5 +1363,66 @@ def download_completed_task_report(request):
         status = "Completed"
         writer.writerow([task.id, task.created_by, task.created_at, task.task_subject, task.due_date, status,])
 
+
+    return response
+
+
+@login_required(login_url='adminlogin')
+def task_approve(request,slug):
+
+    task = get_object_or_404(models.Task,id=slug)
+    task.active = False
+    task.save()
+    return redirect('my-tasks')
+
+@login_required(login_url='adminlogin')
+def merge_task_approve(request,slug):
+
+    task = get_object_or_404(models.Task,id=slug)
+    task.active = False
+    task.save()
+    return redirect('merged_task')
+
+@login_required(login_url='adminlogin')
+def merged_task(request):
+    tasks1 = models.Task.objects.filter(assigned_to=request.user,active=True).order_by('-id')
+    tasks2 = models.Task.objects.filter(created_by=request.user,active=True).order_by('-id')
+    tasks = tasks1 | tasks2
+    dict={
+    'tasks':tasks,
+    'is_hr':is_Hr(request.user)
+    }
+    return render(request,'tasks/merged_task_list.html',context=dict)
+
+
+@login_required(login_url='adminlogin')
+def download_merged_task_report(request):
+    tasks1 = models.Task.objects.filter(assigned_to=request.user,active=True).order_by('-id')
+    tasks2 = models.Task.objects.filter(created_by=request.user,active=True).order_by('-id')
+
+    tasks = tasks1 | tasks2
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="tasks_({})_({} {}).csv"'.format(request.user,request.user.first_name,request.user.last_name)
+
+    writer = csv.writer(response)
+    writer.writerow([' Task merged_list by username:{} ({} {})'.format(request.user, request.user.first_name,request.user.last_name),])
+    writer.writerow([""])
+
+    writer.writerow(['Task ID', 'Created By', 'Assigned To','Created Date', 'Task Subject','Due Date', 'Status', ])
+
+
+    for task in tasks:
+        if task.active:
+            if task.completed:
+                status = "for approval"
+            else:
+                if task.status == None:
+                    status = "Pending"
+                else:
+                    status = "In Progress"
+        else:
+            status = "completed"
+        writer.writerow([task.id, task.created_by, task.assigned_to,task.created_at, task.task_subject, task.due_date, status,])
 
     return response

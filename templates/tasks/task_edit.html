@@ -49,24 +49,24 @@
 			<h1 class="text-center">Edit Task</h1> <hr>
 			<form class="form-horizontal" role="form" method="post">
 				{% csrf_token %}
-				<div class="form-group">
-					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="firstname">Task ID</label>
-					<div class="col-md-8 col-sm-8 col-xs-8">
-						<input type="text" class="form-control" id="id" value={{task.id}} placeholder="Task Subject" maxlength="50"  disabled>
-					</div>
-				</div>
+<!--				<div class="form-group">-->
+<!--					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="firstname">Task ID</label>-->
+<!--					<div class="col-md-8 col-sm-8 col-xs-8">-->
+<!--						<input type="text" class="form-control" id="id" value={{task.id}} placeholder="Task Subject" maxlength="50"  disabled>-->
+<!--					</div>-->
+<!--				</div>-->
 				<div class="form-group">
 					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="firstname">Task Subject:</label>
 					<div class="col-md-8 col-sm-8 col-xs-8">
 						<input type="text" class="form-control" id="firstname" placeholder="Task Subject" maxlength="50" name="subject" value="{{task.task_subject}}" required>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="lastname">Task Detail:</label>
-					<div class="col-md-8 col-sm-8 col-xs-8">
-						<textarea  class="form-control" id="lastname" placeholder="Task Descreption" name="details" >{{task.task_detail}}</textarea>
-					</div>
-				</div>
+<!--				<div class="form-group">-->
+<!--					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="lastname">Task Detail:</label>-->
+<!--					<div class="col-md-8 col-sm-8 col-xs-8">-->
+<!--						<textarea  class="form-control" id="lastname" placeholder="Task Descreption" name="details" >{{task.task_detail}}</textarea>-->
+<!--					</div>-->
+<!--				</div>-->
 				<div class="form-group">
 					<label class="control-label col-md-3 col-sm-3 col-xs-3" for="lastname">Assigned To:</label>
 					<div class="col-md-8 col-sm-8 col-xs-8">

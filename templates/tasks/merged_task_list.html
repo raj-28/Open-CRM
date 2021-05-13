@@ -1,9 +1,9 @@
 {% extends is_hr|yesno:"hr_base.html,employee_base.html" %}
+
 {% block nav %}
 <div class="bs-example">
       <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background:#337AB7;">
-        {% if is_hr %}<a href="#" class="navbar-brand">ASSIGNED TASK PAGE</a>{% else %}
-		  <a href="$" class="navbar-brand">ASSIGNED TASK PAGE</a>{% endif %}
+        <a href="" class="navbar-brand">MY TASKS</a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -42,38 +42,38 @@
 </head>
 
 <div class="container">
-
   <nav aria-label="breadcrumb" class="main-breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item">{% if is_hr %}<a href="/hr-dashboard">Dashboard</a>{% else %}<a href="/employee-dashboard">Dashboard</a>{% endif %}</li>
               <li class="breadcrumb-item "><a href="/task-view">Task-view</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Assigned-Task</li>
+              <li class="breadcrumb-item active" aria-current="page">merge-tasks</li>
             </ol>
           </nav>
 
 
 
   <br>
-  <a href="/download-assigned-task-report"><button type="button" class="btn btn-primary" style="float:right;">Assigned Task Report</button></a>
+  <a href="/download-merged-task-report"><button type="button" class="btn btn-primary" style="float:right;">Merged Task Report</button></a>
   <br>
   <br>
   <div class="panel panel-primary">
 
     <div class="panel-heading">
-      <h6 class="panel-title">{{request.user.username}}({{request.user.first_name}} {{user.last_name}}) Assigned Tasks</h6>
+      <h6 class="panel-title">{{request.user.username}}({{request.user.first_name}} {{user.last_name}}) Merged Tasks</h6>
     </div>
     <table class="table table-bordered" id="dev-table">
       <thead>
         <tr>
           <th>Task_ID</th>
-          <th>Created By</th>
+           <th>Created By</th>
+          <th>Assigned To</th>
           <th>ADD DATE</th>
           <th>TASK SUBJECT</th>
 <!--          <th>DETAILS</th>-->
           <th>DUE DATE</th>
           <th>STATUS</th>
-          <th>Commitment</th>
           <th>Follow</th>
+          <th>Task Approval</th>
 
         </tr>
       </thead>
@@ -81,15 +81,19 @@
       <tr >
         <td >{{task.id}}</td>
         <td >{{task.created_by}} </td>
+        <td >{{task.assigned_to}} </td>
         <td> {{task.created_at}}</td>
         <td>{{task.task_subject}}</td>
 <!--        <td>{{task.task_detail}}</td>-->
-        <td>{% if task.due_date == None %}-{% else %}{{task.due_date}}{% endif %}</td>
-        <td>{% if task.status == None %}Pending {% else %}{% if task.completed %}{% if task.active %}Pending Approval{% else %}Completed {% endif %}{% else %}In Progress{% endif %}{% endif %}</td>
-        <td>{% if task.Commitment %}<a href="/uncommit/{{task.id}}"><button type="button" class="btn btn-success">Committed</button></a>{% else %}
-          <a href="/commit/{{task.id}}"><button type="button" class="btn btn-default">Commit</button></a></td>{% endif %}
+        <td>{{task.due_date}}</td>
+        <td>{% if task.status == None %}Pending {% else %}{% if task.completed %}{% if task.active %}Pending Approval{% else %}Completed {% endif %} {% else %}In Progress{% endif %}{% endif %}</td>
         <td ><a href="/task/{{task.id}}"><button type="submit" class="btn btn-default">Task Detail</button></a></td>
+        <td >{% if task.created_by != request.user %}-{% else %}{% if task.active %}{% if task.completed %}<a href="/merge-task-approve/{{task.id}}"><button type="submit" class="btn btn-danger">Approve</button></a>
+          {% else %}<button type="submit" class="btn btn-danger" disabled>Approve</button>{% endif %}
+          {% else %}<button type="submit" class="btn btn-success" disabled>Approved</button>{% endif %} {% endif %}</td>
       </tr>
+
+
       {% endfor %}
 
 
