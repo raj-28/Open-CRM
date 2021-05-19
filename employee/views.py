@@ -483,7 +483,7 @@ def attendance_download_exel(request,slug):
     writer.writerow(['username:{} ({} {})'.format(username.username, username.first_name,username.last_name),])
     writer.writerow([""])
 
-    writer.writerow(['Attendance Date', 'Attendance', 'Start_time', 'End_time','Work Duration', 'Approved', ])
+    writer.writerow(['Attendance Date', 'Attendance', 'Start_time', 'End_time','Work Duration','Lunch Duration', 'Approved', ])
     January=False
     February=False
     March = False
@@ -571,7 +571,7 @@ def attendance_download_exel(request,slug):
             writer.writerow([""])
             December=True
 
-        writer.writerow([date, present, atnd.Start_time, atnd.end_time, atnd.work_duration, approved,])
+        writer.writerow([date, present, atnd.Start_time, atnd.end_time, atnd.work_duration,atnd.lunch_break_duration, approved,])
 
 
     return response
@@ -1055,7 +1055,7 @@ def create_task(request):
             task=models.Task.objects.create(created_by=created_by,assigned_to=usr,task_subject=task_sub,due_date=due_date)
         task_id=get_object_or_404(models.Task,id=task.id)
         noti = models.Notifications.objects.create(assigned_by=request.user,assigned_to=usr,type="task_assigned",task_id=task_id)
-        return render(request,'tasks/task_create.html',context={'created':True})
+        return render(request,'tasks/task_create.html',context={'created':True,'task_id' :task.id })
 
 
     dict={
@@ -1312,7 +1312,7 @@ def download_assigned_task_report(request):
             status = "pending"
         else:
             status="In Progress"
-        writer.writerow([task.id, task.created_by, task.created_at, task.task_subject, task.due_date, status,])
+        writer.writerow(["WT-{}".format(task.id), task.created_by, task.created_at, task.task_subject, task.due_date, status,])
 
 
     return response
@@ -1338,7 +1338,7 @@ def download_created_task_report(request):
             status = "pending"
         else:
             status="In Progress"
-        writer.writerow([task.id, task.assigned_to, task.created_at, task.task_subject, task.due_date, status,])
+        writer.writerow(["WT-{}".format(task.id), task.assigned_to, task.created_at, task.task_subject, task.due_date, status,])
 
 
     return response
@@ -1361,7 +1361,7 @@ def download_completed_task_report(request):
 
     for task in tasks:
         status = "Completed"
-        writer.writerow([task.id, task.created_by, task.created_at, task.task_subject, task.due_date, status,])
+        writer.writerow(["WT-{}".format(task.id), task.created_by, task.created_at, task.task_subject, task.due_date, status,])
 
 
     return response
@@ -1423,6 +1423,6 @@ def download_merged_task_report(request):
                     status = "In Progress"
         else:
             status = "completed"
-        writer.writerow([task.id, task.created_by, task.assigned_to,task.created_at, task.task_subject, task.due_date, status,])
+        writer.writerow(["WT-{}".format(task.id), task.created_by, task.assigned_to,task.created_at, task.task_subject, task.due_date, status,])
 
     return response

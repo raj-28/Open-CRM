@@ -50,7 +50,7 @@
               {% else %}
                <li class="breadcrumb-item" ><a href="/assigned-task"> assigned-task</a></li>
               {% endif %}
-              <li class="breadcrumb-item active" aria-current="page">{{task.id}}</li>
+              <li class="breadcrumb-item active" aria-current="page">WT-{{task.id}}</li>
             </ol>
           </nav>
 
@@ -60,7 +60,7 @@
   <div class="panel panel-primary">
 
     <div class="panel-heading">
-      <h6 class="panel-title">Subject : {{task.task_subject}}</h6>
+      <h6 class="panel-title">Task ID : WT-{{task.id}}</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
@@ -76,6 +76,13 @@
         <th >Created By </th>
         <td> :</td>
         <td>{{task.created_by}} ({{task.created_by.first_name}}&nbsp;{{task.created_by.last_name}})</td>
+
+      </tr>
+
+        <tr >
+        <th >Add Date </th>
+        <td> :</td>
+        <td>{{task.created_at}} </td>
 
       </tr>
 
