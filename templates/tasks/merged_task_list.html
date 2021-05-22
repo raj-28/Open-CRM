@@ -73,7 +73,7 @@
           <th>DUE DATE</th>
           <th>STATUS</th>
           <th>Follow</th>
-          <th>Task Approval</th>
+<!--          <th>Task Approval</th>-->
 
         </tr>
       </thead>
@@ -86,11 +86,30 @@
         <td>{{task.task_subject}}</td>
 <!--        <td>{{task.task_detail}}</td>-->
         <td>{{task.due_date}}</td>
-        <td>{% if task.status == None %}Pending {% else %}{% if task.completed %}{% if task.active %}Pending Approval{% else %}Completed {% endif %} {% else %}In Progress{% endif %}{% endif %}</td>
+        <td>
+          {% if task.active %}
+            {% if task.completed %}
+              {% if task.created_by == request.user %}
+              <a href="/task-approve/{{task.id}}"><button type="submit" class="btn btn-danger">Approve</button></a>
+              {% else %}
+              Pending For approval
+              {% endif %}
+            {% else %}
+              {% if task.status == None %}Pending
+              {% else %}
+                {% if not task.active %}Completed
+                {% else %}Following
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+          Completed
+          {% endif %}
+        </td>
         <td ><a href="/task/{{task.id}}"><button type="submit" class="btn btn-default">Task Detail</button></a></td>
-        <td >{% if task.created_by != request.user %}-{% else %}{% if task.active %}{% if task.completed %}<a href="/merge-task-approve/{{task.id}}"><button type="submit" class="btn btn-danger">Approve</button></a>
-          {% else %}<button type="submit" class="btn btn-danger" disabled>Approve</button>{% endif %}
-          {% else %}<button type="submit" class="btn btn-success" disabled>Approved</button>{% endif %} {% endif %}</td>
+<!--        <td >{% if task.created_by != request.user %}-{% else %}{% if task.active %}{% if task.completed %}<a href="/merge-task-approve/{{task.id}}"><button type="submit" class="btn btn-danger">Approve</button></a>-->
+<!--          {% else %}<button type="submit" class="btn btn-danger" disabled>Approve</button>{% endif %}-->
+<!--          {% else %}<button type="submit" class="btn btn-success" disabled>Approved</button>{% endif %} {% endif %}</td>-->
       </tr>
 
 

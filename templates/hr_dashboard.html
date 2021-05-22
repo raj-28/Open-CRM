@@ -96,7 +96,16 @@
       <td >Task : {{i.assigned_to}} ({{i.assigned_to.first_name}} {{i.assigned_to.last_name}}) completed Task : <a href="/task/{{i.task_id.id}}">{{i.task_id.task_subject}}</a> </td></td>
       {% endif %}
 
-    </tr><div class="col-sm-6 mb-3">
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+                  </div>
+                </div>
+<div class="col-sm-6 mb-3">
+                  <div class="card h-100">
+                    <div class="col-sm-6 mb-3">
                   <div class="card h-100">
                     <canvas id="canvas" width="400" height="400"
 style="margin-top:-100px">
@@ -104,11 +113,7 @@ style="margin-top:-100px">
                   </div>
                 </div>
               </div>
-    {% endfor %}
-  </tbody>
-</table>
                   </div>
-                </div>
 
 <!--<div class="container">-->
 <!--  <div class="row">-->
